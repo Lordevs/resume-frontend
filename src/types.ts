@@ -34,6 +34,11 @@ export interface SkillsAndInterests {
   soft_skills: string;
 }
 
+export interface SocialLink {
+  name: string; // e.g. "LinkedIn", "GitHub", "Figma", "Portfolio"
+  url: string;  // e.g. "https://linkedin.com/in/..."
+}
+
 export interface LayoutSettings {
   section_spacing_top: string;
   section_spacing_bottom: string;
@@ -47,6 +52,7 @@ export interface Resume {
   phone: string;
   email: string;
 
+  social_links: SocialLink[];  // NEW FIELD
   summary: string;   // << NEW FIELD
 
   education: EducationEntry[];
