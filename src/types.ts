@@ -38,6 +38,7 @@ export interface LayoutSettings {
   section_spacing_top: string;
   section_spacing_bottom: string;
   bullet_spacing: string;
+  section_spacing_after: string;   // NEW
 }
 
 export interface Resume {

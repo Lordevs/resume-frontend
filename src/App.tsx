@@ -1,7 +1,7 @@
 // src/App.tsx
 import React, { useEffect, useState } from "react";
 import { Resume, Project, EducationEntry, ExperienceEntry } from "./types";
-import { fetchResume, saveResume, renderLatex } from "./api";
+import { fetchResume, saveResume, renderLatex, renderPdf } from "./api";
 
 function App() {
   const [resume, setResume] = useState<Resume | null>(null);
@@ -33,6 +33,7 @@ useEffect(() => {
           section_spacing_top: "2mm",
           section_spacing_bottom: "2mm",
           bullet_spacing: "0mm",
+          section_spacing_after: "-5.5mm",
         },
       };
       setResume(normalised);
@@ -40,6 +41,26 @@ useEffect(() => {
     .catch(console.error);
 }, []);
   if (!resume) return <div>Loading...</div>;
+
+  const handleDownloadPdf = async () => {
+    if (!resume) return;
+    try {
+      const blob = await renderPdf(resume);
+      const url = URL.createObjectURL(blob);
+
+      // Trigger browser download
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "resume.pdf";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("PDF error", err);
+      alert("Failed to generate PDF. Check console / backend logs.");
+    }
+  };
 
   const handleFieldChange = (field: keyof Resume, value: any) => {
     setResume({ ...resume, [field]: value });
@@ -166,6 +187,17 @@ const addExperience = () => {
             placeholder="e.g. 2mm"
           />
         </label>
+        <label>
+          Spacing after each section:
+          <input
+            value={resume.layout.section_spacing_after}
+            onChange={(e) =>
+              updateLayout("section_spacing_after", e.target.value)
+            }
+            placeholder="e.g. -5mm, 0mm, 3mm"
+          />
+        </label>
+
         <br />
         <label>
           Bullet spacing:
@@ -450,6 +482,7 @@ const addExperience = () => {
             </button>
           </div>
         ))}
+        
         <button type="button" onClick={addProject}>
           + Add project
         </button>
@@ -468,8 +501,46 @@ const addExperience = () => {
           >
             Generate LaTeX
           </button>
+
+
+          <div style={{ display: "flex", gap: 16, padding: 16 }}>
+            {/* left pane with form ... */}
+
+            <div style={{ marginTop: 16 }}>
+              <button
+                type="button"
+                onClick={async () => resume && (await saveResume(resume))}
+              >
+                Save resume JSON
+              </button>
+              <button
+                type="button"
+                style={{ marginLeft: 8 }}
+                onClick={async () => {
+                  if (!resume) return;
+                  const tex = await renderLatex(resume);
+                  setLatex(tex);
+                }}
+              >
+                Generate LaTeX
+              </button>
+              <button
+                type="button"
+                style={{ marginLeft: 8 }}
+                onClick={handleDownloadPdf}
+              >
+                Download PDF
+              </button>
+            </div>
+
+            {/* right pane with LaTeX preview ... */}
+          </div>
+        
+
         </div>
       </div>
+
+      
 
       <div style={{ flex: 1 }}>
         <h2>LaTeX Output</h2>

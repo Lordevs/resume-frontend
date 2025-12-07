@@ -28,3 +28,19 @@ export async function renderLatex(resume: Resume): Promise<string> {
   const data = await res.json();
   return data.latex;
 }
+
+
+
+export async function renderPdf(resume: Resume): Promise<Blob> {
+  const res = await fetch(`${BASE_URL}/render-pdf`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(resume),
+  });
+  if (!res.ok) {
+    // Try to read JSON error from server for debugging
+    const text = await res.text();
+    throw new Error(`PDF HTTP ${res.status}: ${text}`);
+  }
+  return res.blob(); // application/pdf
+}
