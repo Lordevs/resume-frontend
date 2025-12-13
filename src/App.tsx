@@ -199,9 +199,11 @@ const App: React.FC = () => {
     <div className="app-container">
       {/* Header */}
       <header className="app-header">
-        <div>
-          <h1 className="text-xl font-bold text-slate-900 m-0">LaTeX Resume Builder</h1>
-          <p className="text-sm text-slate-500 m-0">Edit fields on the left, preview on the right.</p>
+        <div className="flex items-center gap-3">
+          <div>
+            <h1 className="text-xl font-bold text-slate-900 m-0 tracking-tight leading-tight">HireOnRank</h1>
+            <p className="text-xs text-slate-500 m-0 font-medium leading-tight">Resume Builder</p>
+          </div>
         </div>
         <div className="flex gap-2">
           <button className="btn btn-secondary" onClick={handleSave}>Save JSON</button>
