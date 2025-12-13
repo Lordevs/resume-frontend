@@ -1,7 +1,7 @@
 // src/api.ts
 import { Resume } from "./types";
 
-const BASE_URL = "http://localhost:5000";
+const BASE_URL = "https://api.resume.hireonrank.com";
 
 export async function fetchResume(): Promise<Resume> {
   const res = await fetch(`${BASE_URL}/resume`);
