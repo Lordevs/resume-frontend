@@ -35,6 +35,7 @@ const App: React.FC = () => {
   const [resume, setResume] = useState<Resume | null>(null);
   const [latex, setLatex] = useState<string>("");
   const [validation, setValidation] = useState<ValidationResult>({ ok: true, messages: [] });
+  const [downloading, setDownloading] = useState(false);
 
   // Section States
   const [personalOpen, setPersonalOpen] = useState(true);
@@ -146,6 +147,16 @@ const App: React.FC = () => {
     setResume({ ...resume, projects: updateArrayItem(resume.projects, index, entry) });
   };
 
+  const handleFullResumeApply = (newResume: Resume) => {
+    // Merge with default layout to ensure consistency if AI misses it
+    const merged = {
+      ...resume,
+      ...newResume,
+      layout: { ...resume.layout, ...(newResume.layout || {}) }
+    };
+    setResume(merged);
+  };
+
   /* ---------- Actions ---------- */
   const handleSave = async () => await saveResume(resume);
 
@@ -163,6 +174,7 @@ const App: React.FC = () => {
       alert("Fix validation issues first.");
       return;
     }
+    setDownloading(true);
     try {
       const blob = await renderPdf(resume);
       const url = URL.createObjectURL(blob);
@@ -175,7 +187,9 @@ const App: React.FC = () => {
       URL.revokeObjectURL(url);
     } catch (err) {
       console.error("PDF error", err);
-      alert("Failed to generate PDF.");
+      // alert("Failed to generate PDF."); // Optional: silent fail or toast
+    } finally {
+      setDownloading(false);
     }
   };
 
@@ -201,11 +215,19 @@ const App: React.FC = () => {
           </button>
           <button
             className="btn btn-secondary"
-            disabled={buttonsDisabled}
-            style={{ opacity: buttonsDisabled ? 0.6 : 1 }}
+            disabled={buttonsDisabled || downloading}
+            style={{ opacity: (buttonsDisabled || downloading) ? 0.6 : 1 }}
             onClick={handleDownloadPdf}
           >
-            Download PDF
+            {downloading ? (
+              <span className="flex items-center gap-2">
+                <svg className="animate-spin h-4 w-4 text-slate-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Downloading...
+              </span>
+            ) : "Download PDF"}
           </button>
         </div>
       </header>
@@ -457,7 +479,7 @@ const App: React.FC = () => {
       </div>
 
       {/* Global AI Assistant */}
-      <AiAssistant />
+      <AiAssistant onApplyResume={handleFullResumeApply} />
     </div>
   );
 };

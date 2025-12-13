@@ -1,6 +1,6 @@
-// src/components/AiAssistant.tsx
 import React, { useState, useRef } from "react";
 import { generateContent } from "../api/gemini";
+import { Resume } from "../types";
 
 /* --- Icons --- */
 const SparklesIcon = () => (
@@ -129,6 +129,22 @@ const styles = {
     gap: 8,
     fontSize: 14,
   },
+  btnSpecial: {
+    width: "100%",
+    padding: "12px",
+    borderRadius: 8,
+    background: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
+    color: "white",
+    fontWeight: 600,
+    border: "none",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    fontSize: 14,
+    boxShadow: "0 4px 6px -1px rgba(79, 70, 229, 0.2)",
+  },
   responseBox: {
     background: "#f8fafc",
     borderRadius: 8,
@@ -157,7 +173,11 @@ const styles = {
 
 /* --- Main Component --- */
 
-export default function AiAssistant() {
+interface AiAssistantProps {
+  onApplyResume?: (resume: Resume) => void;
+}
+
+export default function AiAssistant({ onApplyResume }: AiAssistantProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [prompt, setPrompt] = useState("");
@@ -177,19 +197,89 @@ export default function AiAssistant() {
   5. Output ONLY the requested content (no conversational filler like "Here is your summary:").
   `;
 
-  const handleGenerate = async () => {
-    if (!prompt.trim() && !file) return;
+  // Schema for full resume generation
+  const RESUME_SCHEMA = {
+    name: "string",
+    email: "string",
+    title: "string",
+    phone: "string",
+    summary: "string",
+    social_links: [{ name: "string", url: "string" }],
+    education: [{ degree: "string", grade: "string", institution: "string", duration: "string" }],
+    experiences: [{ role: "string", org: "string", location: "string", duration: "string", bullets: ["string"] }],
+    projects: [{ title: "string", subtitle: "string", date: "string", bullets: ["string"] }],
+    skills: {
+      languages: "string",
+      frameworks: "string",
+      libraries: "string",
+      web_tools: "string",
+      cloud_databases: "string",
+      coursework: "string",
+      areas_of_interest: "string",
+      soft_skills: "string"
+    }
+  };
+
+  const handleGenerate = async (isFullResume: boolean = false) => {
+    if (!prompt.trim() && !file) {
+      if (isFullResume && !file && !prompt.trim()) {
+        alert("Please upload a resume or provide some details (like a LinkedIn bio) to generate a full resume.");
+        return;
+      }
+      if (!isFullResume) return;
+    }
 
     setLoading(true);
     setResult(""); // Clear previous
 
     try {
+      let finalSystemInstruction = SYSTEM_INSTRUCTION;
+      let userPrompt = prompt;
+
+      if (isFullResume) {
+        finalSystemInstruction = `You are a Resume Parser & Generator. 
+        Your task is to extract information from the user's input (Bio, Existing Resume PDF/Image) and structure it into a VALID JSON object.
+        
+        Strictly follow this JSON schema:
+        ${JSON.stringify(RESUME_SCHEMA, null, 2)}
+        
+        Rules:
+        1. OUTPUT ONLY RAW JSON. No markdown backticks, no explanations.
+        2. If information is missing, use empty strings "" or empty arrays [].
+        3. Make the content professional and concise.
+        `;
+
+        if (!userPrompt) userPrompt = "Generate a professional resume from the attached file.";
+      }
+
       const text = await generateContent({
-        prompt,
+        prompt: userPrompt,
         file,
-        systemInstruction: SYSTEM_INSTRUCTION,
+        systemInstruction: finalSystemInstruction,
       });
-      setResult(text || "No response generated.");
+
+      if (isFullResume && onApplyResume) {
+        try {
+          // strip backticks if gemini adds them despite instructions
+          const cleaned = text.replace(/```json/g, "").replace(/```/g, "").trim();
+          const json = JSON.parse(cleaned);
+
+          // Basic validation
+          if (json && typeof json === 'object') {
+            onApplyResume(json as Resume);
+            setResult("Resume successfully generated and applied! Close this window to verify.");
+            setIsOpen(false);
+          } else {
+            setResult("AI generated invalid JSON. Please try again.");
+          }
+        } catch (e) {
+          console.error("JSON Parse Error", e);
+          setResult(`Failed to parse AI response into Resume format.\nRaw output:\n${text}`);
+        }
+      } else {
+        setResult(text || "No response generated.");
+      }
+
     } catch (err) {
       setResult("Error connecting to Gemini. Please check your API key.");
       console.error(err);
@@ -200,7 +290,7 @@ export default function AiAssistant() {
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(result);
-    alert("Copied to clipboard!"); // Replace with a toast if you have one
+    alert("Copied to clipboard!");
   };
 
   const onFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -216,8 +306,8 @@ export default function AiAssistant() {
   return (
     <>
       {/* Floating Action Button */}
-      <button 
-        style={styles.fab} 
+      <button
+        style={styles.fab}
         onClick={() => setIsOpen(true)}
         title="Open AI Assistant"
       >
@@ -229,7 +319,7 @@ export default function AiAssistant() {
 
       {/* Drawer */}
       <div style={{ ...styles.drawer, transform: isOpen ? "translateX(0)" : "translateX(100%)" }}>
-        
+
         {/* Header */}
         <div style={styles.header}>
           <div>
@@ -238,8 +328,8 @@ export default function AiAssistant() {
               Powered by <span style={{ fontWeight: 600, color: "#2563eb" }}>Gemini 2.5 Flash</span>
             </div>
           </div>
-          <button 
-            onClick={() => setIsOpen(false)} 
+          <button
+            onClick={() => setIsOpen(false)}
             style={{ border: "none", background: "transparent", cursor: "pointer", color: "#94a3b8" }}
           >
             <XIcon />
@@ -248,22 +338,42 @@ export default function AiAssistant() {
 
         {/* Content */}
         <div style={styles.content}>
-          
+
+          {/* Main Action for Full Resume */}
+          {onApplyResume && (
+            <div style={{ marginBottom: 10 }}>
+              <button
+                style={styles.btnSpecial}
+                onClick={() => handleGenerate(true)}
+                disabled={loading}
+              >
+                {loading ? "Generating Full Resume..." : (
+                  <>✨ Generate Full Resume from Context</>
+                )}
+              </button>
+              <p style={{ fontSize: 11, color: "#64748b", textAlign: "center", marginTop: 6 }}>
+                Upload a PDF or paste your bio below first!
+              </p>
+            </div>
+          )}
+
+          <hr style={{ border: "none", borderTop: "1px solid #f1f5f9", margin: "0 0 10px 0" }} />
+
           {/* Presets */}
           <div style={styles.chipContainer}>
-            <button 
+            <button
               style={styles.chip}
               onClick={() => applyPreset("Write a professional summary for a software engineer with 3 years experience in React and Node.js.")}
             >
               ✍️ Write Summary
             </button>
-            <button 
+            <button
               style={styles.chip}
               onClick={() => applyPreset("Rewrite these bullet points to be more impactful using STAR method:\n- ")}
             >
               🚀 Enhance Bullets
             </button>
-            <button 
+            <button
               style={styles.chip}
               onClick={() => applyPreset("Analyze the attached resume against a job description I will paste below.")}
             >
@@ -274,7 +384,7 @@ export default function AiAssistant() {
           {/* Text Input */}
           <textarea
             style={styles.textarea}
-            placeholder="Describe what you need (e.g., 'Rewrite my work experience at Google to sound more managerial')"
+            placeholder="Describe what you need (e.g., 'Rewrite my work experience at Google...')"
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
           />
@@ -286,7 +396,7 @@ export default function AiAssistant() {
               {file ? file.name : "Attach context (Resume PDF, Job Desc Image)"}
             </span>
             {file && (
-              <span 
+              <span
                 style={{ color: "#ef4444", fontWeight: "bold", padding: "0 8px" }}
                 onClick={(e) => { e.stopPropagation(); setFile(null); }}
               >
@@ -294,22 +404,22 @@ export default function AiAssistant() {
               </span>
             )}
           </div>
-          <input 
-            type="file" 
-            ref={fileInputRef} 
-            hidden 
+          <input
+            type="file"
+            ref={fileInputRef}
+            hidden
             accept="image/*,application/pdf"
-            onChange={onFileSelect} 
+            onChange={onFileSelect}
           />
 
-          {/* Generate Button */}
-          <button 
-            style={{ ...styles.btnPrimary, opacity: loading ? 0.7 : 1 }} 
-            onClick={handleGenerate} 
+          {/* Regular Generate Button */}
+          <button
+            style={{ ...styles.btnPrimary, opacity: loading ? 0.7 : 1 }}
+            onClick={() => handleGenerate(false)}
             disabled={loading}
           >
             {loading ? "Thinking..." : (
-              <>Generate <SparklesIcon /></>
+              <>Ask Assistant <SparklesIcon /></>
             )}
           </button>
 
@@ -318,7 +428,7 @@ export default function AiAssistant() {
             <div style={styles.responseBox}>
               <div style={styles.responseHeader}>
                 <span>AI Suggestion</span>
-                <button 
+                <button
                   onClick={copyToClipboard}
                   style={{ background: "transparent", border: "none", cursor: "pointer", color: "#2563eb", display: "flex", gap: 4, alignItems: "center", fontSize: 12, fontWeight: 600 }}
                 >
