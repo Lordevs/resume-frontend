@@ -219,8 +219,29 @@ export const useResume = () => {
     setDownloading(true);
     try {
       if (resume) {
-        // NOTE: User requested applying this logic which omits sanitizeResume
-        const blob = await renderPdf(resume);
+        // NOTE: Minimal sanitization for critical LaTeX characters to prevent 500 errors
+        const minimalEscape = (str: string) => {
+          if (!str) return "";
+          return str
+            .replace(/\\/g, "\\textbackslash ")
+            .replace(/([&%$#_{}])/g, "\\$1")
+            .replace(/~/g, "\\textasciitilde ")
+            .replace(/\^/g, "\\textasciicircum ");
+        };
+
+        const safeResume = JSON.parse(JSON.stringify(resume));
+        const walk = (obj: any) => {
+          for (const key in obj) {
+            if (typeof obj[key] === "string") {
+              obj[key] = minimalEscape(obj[key]);
+            } else if (typeof obj[key] === "object" && obj[key] !== null) {
+              walk(obj[key]);
+            }
+          }
+        };
+        walk(safeResume);
+
+        const blob = await renderPdf(safeResume);
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
