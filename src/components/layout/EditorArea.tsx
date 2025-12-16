@@ -512,7 +512,7 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
                       placeholder="• Built a scalable backend..."
                     />
                     <button
-                      className="btn btn-ghost text-slate-400 hover:text-red-500 p-1 rounded transition-colors self-start mt-8"
+                      className="text-red-500 hover:text-red-600 hover:bg-red-50 p-1 rounded-full transition-colors self-start mt-2"
                       onClick={() => {
                         const newBullets = [...proj.bullets];
                         newBullets.splice(bi, 1);

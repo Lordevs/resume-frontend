@@ -2,7 +2,17 @@ import React, { useState, useRef } from "react";
 import { generateContent } from "../api/gemini";
 import { Resume } from "../types";
 import { toast } from "react-toastify";
-import { Sparkles, X, Copy, Paperclip } from "lucide-react";
+import {
+  Sparkles,
+  X,
+  Copy,
+  Paperclip,
+  PenTool,
+  Zap,
+  Search,
+  Wand2,
+  Loader2,
+} from "lucide-react";
 
 interface AiAssistantProps {
   onApplyResume?: (resume: Resume) => void;
@@ -239,9 +249,14 @@ export default function AiAssistant({
                   onClick={() => handleGenerate(true)}
                   disabled={loading}>
                   {loading ? (
-                    "Generating Full Resume..."
+                    <>
+                      <Loader2 size={16} className="animate-spin" />{" "}
+                      Generating...
+                    </>
                   ) : (
-                    <>✨ Generate Full Resume from Context</>
+                    <>
+                      <Wand2 size={16} /> Generate Full Resume from Context
+                    </>
                   )}
                 </button>
                 <p
@@ -273,7 +288,7 @@ export default function AiAssistant({
                     "Write a professional summary for a software engineer with 3 years experience in React and Node.js."
                   )
                 }>
-                ✍️ Write Summary
+                <PenTool size={14} /> Write Summary
               </button>
               <button
                 className="ai-chip"
@@ -282,7 +297,7 @@ export default function AiAssistant({
                     "Rewrite these bullet points to be more impactful using STAR method:\n- "
                   )
                 }>
-                🚀 Enhance Bullets
+                <Zap size={14} /> Enhance Bullets
               </button>
               <button
                 className="ai-chip"
@@ -291,7 +306,7 @@ export default function AiAssistant({
                     "Analyze the attached resume against a job description I will paste below."
                   )
                 }>
-                🔍 Review Resume
+                <Search size={14} /> Review Resume
               </button>
             </div>
 
