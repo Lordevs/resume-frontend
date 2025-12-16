@@ -20,9 +20,6 @@ import {
   Zap,
   LayoutTemplate,
   FileText,
-  Save,
-  Eye,
-  Download,
 } from "lucide-react";
 
 interface ValidationResult {
@@ -102,8 +99,8 @@ const App: React.FC = () => {
     escaped = escaped.replace(/([&%$#_{}])/g, "\\$1");
     escaped = escaped.replace(/~/g, "\\textasciitilde ");
     escaped = escaped.replace(/\^/g, "\\textasciicircum ");
-    // Replace newlines with double backslash for line breaks
-    escaped = escaped.replace(/\n/g, " \\\\ ");
+    // Replace newlines with double backslash for line breaks, avoiding duplicates
+    escaped = escaped.trim().replace(/\n+/g, " \\\\ ");
     return escaped;
   };
 
@@ -347,19 +344,13 @@ const App: React.FC = () => {
       {/* Top Header - Minimal */}
       <header className="bg-white border-b border-slate-200 px-6 py-3 flex justify-between items-center shadow-sm z-10">
         <div className="flex items-center gap-3">
-          <div className="h-8 w-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-lg shadow-indigo-200 shadow-lg">
-            H
-          </div>
           <div>
-            <h1 className="text-lg font-bold text-slate-800 m-0 leading-tight">
-              HireOnRank
-            </h1>
-            <p className="text-xs text-slate-500 m-0 font-medium tracking-wide">
-              RESUME BUILDER
-            </p>
+            <div>
+              <img src="logo.svg" alt="Logo" className=" object-contain" />
+            </div>
           </div>
         </div>
-        <div className="flex gap-3">
+        <div className="flex justify-center items-center gap-3">
           <button className="btn btn-secondary text-sm" onClick={handleSave}>
             Save Progress
           </button>
