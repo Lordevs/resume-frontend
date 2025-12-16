@@ -1,13 +1,13 @@
 :root {
-  /* Modern Purple/Violet Theme */
-  --primary: #6366f1; /* Indigo 500 */
-  --primary-hover: #4f46e5;
-  --secondary: #f3f4f6;
-  --text-main: #1e293b;
-  --text-muted: #64748b;
-  --bg-app: #f8fafc;
-  --bg-panel: #ffffff;
-  --border-color: #e2e8f0;
+  /* Custom Theme (Oklch) */
+  --primary: oklch(0.37 0.14 323.40);
+  --primary-hover: oklch(0.32 0.14 323.40); /* Slightly darker */
+  --secondary: oklch(0.96 0.01 311.36);
+  --text-main: oklch(0.23 0 0);
+  --text-muted: oklch(0.49 0 0);
+  --bg-app: oklch(1.00 0 0);
+  --bg-panel: oklch(0.98 0 0);
+  --border-color: oklch(0.91 0 0);
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --radius-md: 0.75rem; /* 12px */
@@ -235,6 +235,8 @@ body {
   border-radius: 50%;
   font-size: 1rem;
   font-weight: 700;
+  background: var(--secondary);
+  color: var(--primary);
   transition: all 0.2s;
 }
 

@@ -73,7 +73,7 @@ const styles = {
     width: 56,
     height: 56,
     borderRadius: "50%",
-    background: "#0f172a", // Slate-900
+    background: "var(--primary)",
     color: "white",
     border: "none",
     boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
@@ -166,7 +166,7 @@ const styles = {
     width: "100%",
     padding: "12px",
     borderRadius: 8,
-    background: "#0f172a",
+    background: "var(--primary)",
     color: "white",
     fontWeight: 600,
     border: "none",

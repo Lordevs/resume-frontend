@@ -337,8 +337,6 @@ const App: React.FC = () => {
     },
   ];
 
-  const buttonsDisabled = !validation.ok;
-
   return (
     <div className="app-container">
       {/* Top Header - Minimal */}
@@ -373,7 +371,7 @@ const App: React.FC = () => {
         {/* Left Sidebar */}
         <aside className="nav-sidebar custom-scrollbar">
           <div className="mb-4 px-2">
-            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+            <h3 className="text-md font-bold text-black uppercase tracking-wider mb-2">
               Sections
             </h3>
             <div className="nav-grid">
@@ -414,9 +412,7 @@ const App: React.FC = () => {
                 title="Personal Information"
                 description="Start with the basics. Employers need to know who you are and how to contact you."
                 icon={
-                  <div
-                    className="icon-circle"
-                    style={{ background: "#dbeafe", color: "#1d4ed8" }}>
+                  <div className="icon-circle">
                     <User size={20} />
                   </div>
                 }
@@ -505,9 +501,7 @@ const App: React.FC = () => {
                 title="Professional Summary"
                 description="Write a short summary of your background and career goals."
                 icon={
-                  <div
-                    className="icon-circle"
-                    style={{ background: "#dcfce7", color: "#15803d" }}>
+                  <div className="icon-circle">
                     <FileText size={20} />
                   </div>
                 }
@@ -531,9 +525,7 @@ const App: React.FC = () => {
                 title="Education"
                 description="Add your academic background."
                 icon={
-                  <div
-                    className="icon-circle"
-                    style={{ background: "#e0f2fe", color: "#0369a1" }}>
+                  <div className="icon-circle">
                     <GraduationCap size={20} />
                   </div>
                 }
@@ -634,9 +626,7 @@ const App: React.FC = () => {
                 title="Work Experience"
                 description="List your relevant work experience, starting with the most recent."
                 icon={
-                  <div
-                    className="icon-circle"
-                    style={{ background: "#fef3c7", color: "#b45309" }}>
+                  <div className="icon-circle">
                     <Briefcase size={20} />
                   </div>
                 }
@@ -780,9 +770,7 @@ const App: React.FC = () => {
                 title="Projects"
                 description="Showcase your best work."
                 icon={
-                  <div
-                    className="icon-circle"
-                    style={{ background: "#cffafe", color: "#0f766e" }}>
+                  <div className="icon-circle">
                     <FolderGit2 size={20} />
                   </div>
                 }
@@ -910,9 +898,7 @@ const App: React.FC = () => {
               <ResumeSection
                 title="Skills & Interests"
                 icon={
-                  <div
-                    className="icon-circle"
-                    style={{ background: "#ede9fe", color: "#6d28d9" }}>
+                  <div className="icon-circle">
                     <Zap size={20} />
                   </div>
                 }
@@ -961,9 +947,7 @@ const App: React.FC = () => {
                 title="Layout Settings"
                 description="Fine-tune your resume's spacing."
                 icon={
-                  <div
-                    className="icon-circle"
-                    style={{ background: "#fee2e2", color: "#b91c1c" }}>
+                  <div className="icon-circle">
                     <LayoutTemplate size={20} />
                   </div>
                 }
