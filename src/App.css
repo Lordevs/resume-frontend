@@ -143,12 +143,24 @@ body {
 }
 
 .editor-card {
+  /* Deprecated monolithic card - keeping just in case */
+  background: var(--bg-panel);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.section-card {
   background: var(--bg-panel);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
   padding: 2rem;
   max-width: 800px; /* Constrain width for readability */
-  margin: 0 auto;
+  margin: 0 auto 2rem auto; /* Added bottom margin for separation */
+  border: 1px solid var(--border-color);
+  scroll-margin-top: 1.5rem; /* Ensure smooth scroll doesn't hide behind margins */
 }
 
 /* Right Preview */

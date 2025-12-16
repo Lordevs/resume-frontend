@@ -96,10 +96,10 @@ export const useResume = () => {
       sanitizeField(clean.skills, key);
     });
 
-    Object.keys(clean.layout).forEach((key) => {
-      const k = key as keyof typeof clean.layout;
-      //   clean.layout[k] = fixLatexDimension(String(clean.layout[k]));
-    });
+    // Object.keys(clean.layout).forEach((key) => {
+    //   const k = key as keyof typeof clean.layout;
+    //   clean.layout[k] = fixLatexDimension(String(clean.layout[k]));
+    // });
 
     return clean;
   };

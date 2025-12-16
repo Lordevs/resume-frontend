@@ -45,7 +45,13 @@ const App: React.FC = () => {
         {/* Left Sidebar */}
         <NavigationSidebar
           activeSection={activeSection}
-          setActiveSection={setActiveSection}
+          setActiveSection={(section: string) => {
+            setActiveSection(section);
+            const element = document.getElementById(`section-${section}`);
+            if (element) {
+              element.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+          }}
         />
 
         {/* Center Editor */}

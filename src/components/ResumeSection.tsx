@@ -1,6 +1,7 @@
 import React, { ReactNode } from "react";
 
 interface ResumeSectionProps {
+  id?: string;
   title: string;
   description?: string;
   icon: ReactNode;
@@ -29,6 +30,7 @@ interface ResumeSectionProps {
 // );
 
 export const ResumeSection: React.FC<ResumeSectionProps> = ({
+  id,
   title,
   description,
   icon,
@@ -39,7 +41,7 @@ export const ResumeSection: React.FC<ResumeSectionProps> = ({
   rightElement,
 }) => {
   return (
-    <div className="section-card">
+    <div id={id} className="section-card">
       <div className="section-header" onClick={onToggle}>
         <div className="flex items-center gap-4">
           {icon}
