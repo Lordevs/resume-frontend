@@ -225,6 +225,19 @@ body {
   resize: vertical;
 }
 
+/* Icon Circle Helper */
+.icon-circle {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 1rem;
+  font-weight: 700;
+  transition: all 0.2s;
+}
+
 /* Buttons */
 .btn {
   display: inline-flex;

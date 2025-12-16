@@ -12,56 +12,18 @@ import { ResumeSection } from "./components/ResumeSection";
 import { FormInput } from "./components/FormInput";
 import "./App.css";
 
-// Helper Icons
-const IconP = () => (
-  <div
-    className="icon-circle"
-    style={{ background: "#dbeafe", color: "#1d4ed8" }}>
-    P
-  </div>
-);
-const IconE = () => (
-  <div
-    className="icon-circle"
-    style={{ background: "#e0f2fe", color: "#0369a1" }}>
-    E
-  </div>
-);
-const IconX = () => (
-  <div
-    className="icon-circle"
-    style={{ background: "#fef3c7", color: "#b45309" }}>
-    X
-  </div>
-);
-const IconS = () => (
-  <div
-    className="icon-circle"
-    style={{ background: "#ede9fe", color: "#6d28d9" }}>
-    S
-  </div>
-);
-const IconPr = () => (
-  <div
-    className="icon-circle"
-    style={{ background: "#cffafe", color: "#0f766e" }}>
-    Pr
-  </div>
-);
-const IconL = () => (
-  <div
-    className="icon-circle"
-    style={{ background: "#fee2e2", color: "#b91c1c" }}>
-    L
-  </div>
-);
-const IconSum = () => (
-  <div
-    className="icon-circle"
-    style={{ background: "#dcfce7", color: "#15803d" }}>
-    Σ
-  </div>
-);
+import {
+  User,
+  GraduationCap,
+  Briefcase,
+  FolderGit2,
+  Zap,
+  LayoutTemplate,
+  FileText,
+  Save,
+  Eye,
+  Download,
+} from "lucide-react";
 
 interface ValidationResult {
   ok: boolean;
@@ -361,13 +323,21 @@ const App: React.FC = () => {
 
   // Nav Items Configuration
   const navItems = [
-    { id: "personal", label: "Personal Info", icon: <IconP /> },
-    { id: "summary", label: "Summary", icon: <IconSum /> },
-    { id: "education", label: "Education", icon: <IconE /> },
-    { id: "experience", label: "Work Experience", icon: <IconX /> },
-    { id: "projects", label: "Projects", icon: <IconPr /> },
-    { id: "skills", label: "Skills", icon: <IconS /> },
-    { id: "layout", label: "Layout Settings", icon: <IconL /> },
+    { id: "personal", label: "Personal Info", icon: <User size={20} /> },
+    { id: "summary", label: "Summary", icon: <FileText size={20} /> },
+    { id: "education", label: "Education", icon: <GraduationCap size={20} /> },
+    {
+      id: "experience",
+      label: "Work Experience",
+      icon: <Briefcase size={20} />,
+    },
+    { id: "projects", label: "Projects", icon: <FolderGit2 size={20} /> },
+    { id: "skills", label: "Skills", icon: <Zap size={20} /> },
+    {
+      id: "layout",
+      label: "Layout Settings",
+      icon: <LayoutTemplate size={20} />,
+    },
   ];
 
   const buttonsDisabled = !validation.ok;
@@ -452,7 +422,13 @@ const App: React.FC = () => {
               <ResumeSection
                 title="Personal Information"
                 description="Start with the basics. Employers need to know who you are and how to contact you."
-                icon={<IconP />}
+                icon={
+                  <div
+                    className="icon-circle"
+                    style={{ background: "#dbeafe", color: "#1d4ed8" }}>
+                    <User size={20} />
+                  </div>
+                }
                 isOpen={true}
                 onToggle={() => {}}
                 badge="Required">
@@ -537,7 +513,13 @@ const App: React.FC = () => {
               <ResumeSection
                 title="Professional Summary"
                 description="Write a short summary of your background and career goals."
-                icon={<IconSum />}
+                icon={
+                  <div
+                    className="icon-circle"
+                    style={{ background: "#dcfce7", color: "#15803d" }}>
+                    <FileText size={20} />
+                  </div>
+                }
                 isOpen={true}
                 onToggle={() => {}}
                 badge="Required">
@@ -557,7 +539,13 @@ const App: React.FC = () => {
               <ResumeSection
                 title="Education"
                 description="Add your academic background."
-                icon={<IconE />}
+                icon={
+                  <div
+                    className="icon-circle"
+                    style={{ background: "#e0f2fe", color: "#0369a1" }}>
+                    <GraduationCap size={20} />
+                  </div>
+                }
                 isOpen={true}
                 onToggle={() => {}}
                 badge="Required">
@@ -654,7 +642,13 @@ const App: React.FC = () => {
               <ResumeSection
                 title="Work Experience"
                 description="List your relevant work experience, starting with the most recent."
-                icon={<IconX />}
+                icon={
+                  <div
+                    className="icon-circle"
+                    style={{ background: "#fef3c7", color: "#b45309" }}>
+                    <Briefcase size={20} />
+                  </div>
+                }
                 isOpen={true}
                 onToggle={() => {}}>
                 {resume.experiences.map((exp, i) => (
@@ -794,7 +788,13 @@ const App: React.FC = () => {
               <ResumeSection
                 title="Projects"
                 description="Showcase your best work."
-                icon={<IconPr />}
+                icon={
+                  <div
+                    className="icon-circle"
+                    style={{ background: "#cffafe", color: "#0f766e" }}>
+                    <FolderGit2 size={20} />
+                  </div>
+                }
                 isOpen={true}
                 onToggle={() => {}}>
                 {resume.projects.map((proj, i) => (
@@ -918,7 +918,13 @@ const App: React.FC = () => {
             {activeSection === "skills" && (
               <ResumeSection
                 title="Skills & Interests"
-                icon={<IconS />}
+                icon={
+                  <div
+                    className="icon-circle"
+                    style={{ background: "#ede9fe", color: "#6d28d9" }}>
+                    <Zap size={20} />
+                  </div>
+                }
                 isOpen={true}
                 onToggle={() => {}}>
                 <div className="grid grid-cols-1 gap-5">
@@ -963,7 +969,13 @@ const App: React.FC = () => {
               <ResumeSection
                 title="Layout Settings"
                 description="Fine-tune your resume's spacing."
-                icon={<IconL />}
+                icon={
+                  <div
+                    className="icon-circle"
+                    style={{ background: "#fee2e2", color: "#b91c1c" }}>
+                    <LayoutTemplate size={20} />
+                  </div>
+                }
                 isOpen={true}
                 onToggle={() => {}}>
                 <div className="grid grid-cols-2 gap-4">
