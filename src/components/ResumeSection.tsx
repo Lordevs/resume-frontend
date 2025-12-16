@@ -10,6 +10,7 @@ interface ResumeSectionProps {
   badge?: string;
   children: ReactNode;
   rightElement?: ReactNode;
+  validationErrors?: string[];
 }
 
 // const ChevronIcon = ({ open }: { open: boolean }) => (
@@ -38,10 +39,16 @@ export const ResumeSection: React.FC<ResumeSectionProps> = ({
   onToggle,
   badge,
   children,
+
   rightElement,
+  validationErrors = [],
 }) => {
   return (
-    <div id={id} className="section-card">
+    <div
+      id={id}
+      className={`section-card ${
+        validationErrors.length > 0 ? "border-red-500" : ""
+      }`}>
       <div className="section-header" onClick={onToggle}>
         <div className="flex items-center gap-4">
           {icon}
@@ -80,7 +87,23 @@ export const ResumeSection: React.FC<ResumeSectionProps> = ({
         </div>
       </div>
 
-      {isOpen && <div className="section-body">{children}</div>}
+      {isOpen && (
+        <div className="section-body">
+          {validationErrors.length > 0 && (
+            <div className="bg-red-50 border-l-4 border-red-500 p-3 my-4 rounded-r">
+              <h4 className="text-xs font-bold text-red-800 uppercase tracking-wide mb-1">
+                Attention Needed
+              </h4>
+              <ul className="list-disc pl-4 text-sm text-red-700 space-y-1">
+                {validationErrors.map((err, idx) => (
+                  <li key={idx}>{err}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {children}
+        </div>
+      )}
     </div>
   );
 };

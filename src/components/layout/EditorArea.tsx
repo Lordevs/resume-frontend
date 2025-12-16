@@ -21,6 +21,14 @@ import { ResumeSection } from "../ResumeSection";
 import { FormInput } from "../FormInput";
 import { ValidationResult } from "../../handlers/useResume";
 
+console.log("DEBUG: EditorArea Imports", {
+  ResumeSection,
+  FormInput,
+  Trash2,
+  X,
+  LayoutTemplate,
+});
+
 interface EditorAreaProps {
   resume: Resume;
   activeSection: string;
@@ -114,7 +122,6 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
 
   const handleScroll = (e: React.UIEvent<HTMLElement>) => {
     const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
-    // Check if we are close to the bottom (e.g., within 50px)
     if (scrollHeight - scrollTop <= clientHeight + 50) {
       if (typeof setActiveSection === "function") {
         setActiveSection("layout");
@@ -126,42 +133,6 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
     <main
       className="editor-area custom-scrollbar pb-[50vh]"
       onScroll={handleScroll}>
-      {Object.keys(validation.errorsBySection).length > 0 && (
-        <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r max-w-[800px] mx-auto">
-          <div className="flex items-start">
-            <div className="flex-shrink-0">
-              <svg
-                className="h-5 w-5 text-red-400"
-                viewBox="0 0 20 20"
-                fill="currentColor">
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </div>
-            <div className="ml-3">
-              <h3 className="text-sm font-medium text-red-800">
-                Please fix the following errors:
-              </h3>
-              <div className="mt-2 text-sm text-red-700">
-                <ul className="list-disc pl-5 space-y-1">
-                  {Object.entries(validation.errorsBySection).map(
-                    ([section, errors]) => (
-                      <li key={section}>
-                        <span className="capitalize font-bold">{section}:</span>{" "}
-                        {errors.join(", ")}
-                      </li>
-                    )
-                  )}
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Personal Section */}
       <div className="mb-12">
         <ResumeSection
@@ -175,6 +146,7 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
           }
           isOpen={true}
           onToggle={() => {}}
+          validationErrors={validation.errorsBySection["personal"]}
           badge="Required">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
             <FormInput
@@ -258,6 +230,7 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
           }
           isOpen={true}
           onToggle={() => {}}
+          validationErrors={validation.errorsBySection["summary"]}
           badge="Required">
           <FormInput
             textarea
@@ -284,6 +257,7 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
           }
           isOpen={true}
           onToggle={() => {}}
+          validationErrors={validation.errorsBySection["education"]}
           badge="Required">
           {resume.education.map((edu, i) => (
             <div
