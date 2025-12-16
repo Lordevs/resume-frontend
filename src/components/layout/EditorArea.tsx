@@ -315,7 +315,7 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
                 title="Remove Entry">
                 <Trash2 size={18} />
               </button>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 my-4">
                 <FormInput
                   label="Job Role"
                   value={exp.role}
@@ -427,14 +427,14 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
           {resume.projects.map((proj, i) => (
             <div
               key={i}
-              className="bg-slate-50 p-4 rounded-lg mb-6 border border-slate-100 relative group">
+              className="bg-slate-50 p-4 rounded-lg my-4 border border-slate-100 relative group">
               <button
                 className="absolute top-4 right-4 text-red-400 hover:text-red-600 hover:bg-red-50 p-2 rounded-full transition-all"
                 onClick={() => removeProject(i)}
                 title="Remove Entry">
                 <Trash2 size={18} />
               </button>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 my-3">
                 <FormInput
                   label="Project Title"
                   value={proj.title}
