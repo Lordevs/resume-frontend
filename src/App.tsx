@@ -3,7 +3,6 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 
-import AiAssistant from "./components/AiAssistant";
 import { useResume } from "./handlers/useResume";
 import { Header } from "./components/layout/Header";
 import { NavigationSidebar } from "./components/layout/NavigationSidebar";
@@ -52,6 +51,7 @@ const App: React.FC = () => {
               element.scrollIntoView({ behavior: "smooth", block: "start" });
             }
           }}
+          onApplyResume={handleFullResumeApply}
         />
 
         {/* Center Editor */}
@@ -74,9 +74,6 @@ const App: React.FC = () => {
           </div>
         </aside> */}
       </div>
-
-      {/* AI Assistant - Floating Button & Drawer */}
-      <AiAssistant onApplyResume={handleFullResumeApply} />
     </div>
   );
 };

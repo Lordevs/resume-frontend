@@ -173,10 +173,10 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
                   }
                 />
                 <button
-                  className="btn btn-ghost text-red-500 hover:bg-red-50 p-2 rounded-md transition-colors mt-5"
+                  className="text-red-500 hover:bg-red-50 p-2 rounded-full transition-colors mt-2"
                   onClick={() => removeSocialLink(i)}
                   title="Remove Link">
-                  <Trash2 size={18} />
+                  <X size={18} />
                 </button>
               </div>
             ))}
@@ -379,7 +379,7 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
                       placeholder="• Developed a feature that..."
                     />
                     <button
-                      className="btn btn-ghost text-slate-400 hover:text-red-500 p-1 rounded transition-colors self-start mb-6"
+                      className="text-bold text-red-400 hover:text-red-600 hover:bg-red-50 p-1 rounded-full transition-colors self-start mt-2 mb-6"
                       onClick={() => {
                         const newBullets = [...exp.bullets];
                         newBullets.splice(bi, 1);
@@ -524,7 +524,7 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
           }
           isOpen={true}
           onToggle={() => {}}>
-          <div className="grid grid-cols-1 gap-5">
+          <div className="grid grid-cols-1 gap-5 my-3">
             <FormInput
               label="Languages"
               value={resume.skills.languages}
@@ -578,7 +578,7 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
           }
           isOpen={true}
           onToggle={() => {}}>
-          <div className="grid grid-cols-2 gap-5">
+          <div className="grid grid-cols-2 gap-5 my-3">
             <FormInput
               label="Section Spacing Top"
               value={resume.layout.section_spacing_top}

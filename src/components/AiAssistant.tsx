@@ -224,9 +224,13 @@ const styles = {
 
 interface AiAssistantProps {
   onApplyResume?: (resume: Resume) => void;
+  trigger?: (props: { onClick: () => void }) => React.ReactNode;
 }
 
-export default function AiAssistant({ onApplyResume }: AiAssistantProps) {
+export default function AiAssistant({
+  onApplyResume,
+  trigger,
+}: AiAssistantProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [prompt, setPrompt] = useState("");
@@ -385,13 +389,17 @@ export default function AiAssistant({ onApplyResume }: AiAssistantProps) {
 
   return (
     <>
-      {/* Floating Action Button */}
-      <button
-        style={styles.fab}
-        onClick={() => setIsOpen(true)}
-        title="Open AI Assistant">
-        <SparklesIcon />
-      </button>
+      {/* Floating Action Button or Custom Trigger */}
+      {trigger ? (
+        trigger({ onClick: () => setIsOpen(true) })
+      ) : (
+        <button
+          style={styles.fab}
+          onClick={() => setIsOpen(true)}
+          title="Open AI Assistant">
+          <SparklesIcon />
+        </button>
+      )}
 
       {/* Backdrop */}
       {isOpen && (

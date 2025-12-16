@@ -8,15 +8,19 @@ import {
   Zap,
   LayoutTemplate,
 } from "lucide-react";
+import AiAssistant from "../AiAssistant";
+import { Resume } from "../../types";
 
 interface NavigationSidebarProps {
   activeSection: string;
   setActiveSection: (section: string) => void;
+  onApplyResume: (resume: Resume) => void;
 }
 
 export const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
   activeSection,
   setActiveSection,
+  onApplyResume,
 }) => {
   const navItems = [
     { id: "personal", label: "Personal Info", icon: <User size={20} /> },
@@ -55,6 +59,32 @@ export const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
             </button>
           ))}
         </div>
+      </div>
+      <div className="px-2 mt-auto">
+        <AiAssistant
+          onApplyResume={onApplyResume}
+          trigger={({ onClick }) => (
+            <button
+              className="nav-item-card"
+              onClick={onClick}
+              style={{
+                width: "100%",
+                background: "var(--primary)",
+                color: "white",
+                border: "none",
+              }}>
+              <div
+                className="nav-icon-container"
+                style={{
+                  background: "rgba(255, 255, 255, 0.2)",
+                  color: "white",
+                }}>
+                <Zap size={20} />
+              </div>
+              <span className="nav-label">AI Assistant</span>
+            </button>
+          )}
+        />
       </div>
     </aside>
   );
