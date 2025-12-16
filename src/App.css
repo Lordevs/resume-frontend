@@ -549,15 +549,15 @@ body {
     transform: translateX(-50%);
     width: 90%; /* Not full width */
     max-width: 400px;
-    height: 70px;
+    height: 90px; /* Increase height to prevent shadow clipping */
     margin: 0;
     border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.6);
     z-index: 100;
-    padding: 0 0.5rem;
+    padding: 0.5rem 0.5rem; /* More vertical padding for bounce */
     flex-direction: row;
     overflow-x: auto; /* Allow scroll if too many items */
-    background: rgba(255, 255, 255, 0.5); /* Glassmorphism */
+    background: rgba(255, 255, 255, 0.85); /* Slightly more opaque */
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     align-items: center;
@@ -565,6 +565,44 @@ body {
     -webkit-overflow-scrolling: touch;
     gap: 0.25rem;
     justify-content: center; /* Center items */
+  }
+
+  /* ... (First child styles same as before) ... */
+
+  /* Fix clipping by removing large vertical transforms on mobile */
+  .nav-item-card:hover {
+    transform: none; 
+    background: rgba(255, 255, 255, 0.5);
+  }
+
+  .nav-item-card.active {
+    background: var(--primary);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* Reduced shadow spread */
+    color: white;
+    transform: scale(1.05); /* Scale instead of translate to avoid top clip */
+  }
+
+  /* New AI Button Colors - "Premium Dark" */
+  .ai-nav-button {
+      width: 50px !important;
+      height: 50px !important;
+      padding: 0 !important;
+      border-radius: 50% !important;
+      /* Deep Dark Blue/Purple Gradient */
+      background: var(--primary) !important;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.4);
+      border: 1px solid var(--primary) !important;
+  }
+  
+  .ai-nav-icon {
+      background: transparent !important;
+      color: #fff !important; /* Cyan icon for tech feel */
+      width: 24px !important;
+      height: 24px !important;
+  }
+
+  .ai-nav-button .nav-label {
+      display: none;
   }
 
   /* Hide the "Sections" header on mobile */
@@ -608,16 +646,17 @@ body {
     margin: 0 2px;
   }
 
+  /* Fix clipping by removing large vertical transforms on mobile */
   .nav-item-card:hover {
-    transform: translateY(-2px);
+    transform: none; 
     background: rgba(255, 255, 255, 0.5);
   }
 
   .nav-item-card.active {
     background: var(--primary);
-    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3); /* Glow effect */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* Reduced shadow spread */
     color: white;
-    transform: translateY(-4px);
+    transform: scale(1.05); /* Scale instead of translate to avoid top clip */
   }
 
   .nav-icon-container {
@@ -649,14 +688,15 @@ body {
       flex-shrink: 0;
   }
   
-  /* Make AI button stand out */
+  /* New AI Button Colors - Primary & White */
   .ai-nav-button {
       width: 50px !important;
       height: 50px !important;
       padding: 0 !important;
       border-radius: 50% !important;
-      background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%) !important;
-      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+      background: var(--primary) !important;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.4);
+      border: 1px solid var(--primary) !important;
   }
   
   .ai-nav-icon {
