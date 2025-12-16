@@ -1,0 +1,609 @@
+import React from "react";
+import {
+  User,
+  FileText,
+  GraduationCap,
+  Briefcase,
+  FolderGit2,
+  Zap,
+  LayoutTemplate,
+} from "lucide-react";
+import {
+  Resume,
+  SocialLink,
+  EducationEntry,
+  ExperienceEntry,
+  Project,
+} from "../../types";
+import { ResumeSection } from "../ResumeSection";
+import { FormInput } from "../FormInput";
+import { ValidationResult } from "../../handlers/useResume";
+
+interface EditorAreaProps {
+  resume: Resume;
+  activeSection: string;
+  validation: ValidationResult;
+  updateResumeField: (field: keyof Resume, value: any) => void;
+  updateSkills: (field: keyof Resume["skills"], value: string) => void;
+  updateLayout: (field: keyof Resume["layout"], value: string) => void;
+  handleSocialChange: (index: number, partial: Partial<SocialLink>) => void;
+  addSocialLink: () => void;
+  removeSocialLink: (index: number) => void;
+  handleEducationChange: (
+    index: number,
+    entry: Partial<EducationEntry>
+  ) => void;
+  handleExperienceChange: (
+    index: number,
+    entry: Partial<ExperienceEntry>
+  ) => void;
+  handleProjectChange: (index: number, entry: Partial<Project>) => void;
+  removeEducation: (index: number) => void;
+  removeExperience: (index: number) => void;
+  removeProject: (index: number) => void;
+  addEducation: () => void;
+  addExperience: () => void;
+  addProject: () => void;
+}
+
+export const EditorArea: React.FC<EditorAreaProps> = ({
+  resume,
+  activeSection,
+  validation,
+  updateResumeField,
+  updateSkills,
+  updateLayout,
+  handleSocialChange,
+  addSocialLink,
+  removeSocialLink,
+  handleEducationChange,
+  handleExperienceChange,
+  handleProjectChange,
+  removeEducation,
+  removeExperience,
+  removeProject,
+  addEducation,
+  addExperience,
+  addProject,
+}) => {
+  return (
+    <main className="editor-area custom-scrollbar">
+      <div className="editor-card">
+        {validation.errorsBySection[activeSection] &&
+          validation.errorsBySection[activeSection].length > 0 && (
+            <div className="bg-red-50 border border-red-100 text-red-700 p-3 rounded-lg mb-6 text-sm flex flex-col gap-1">
+              <span className="font-bold flex items-center gap-2">
+                <span className="text-xl">!</span> Action Required
+              </span>
+              <ul className="list-disc pl-5 m-0 text-slate-600">
+                {validation.errorsBySection[activeSection].map((m, i) => (
+                  <li key={i}>{m}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+        {/* Dynamic Section Rendering */}
+        {activeSection === "personal" && (
+          <ResumeSection
+            title="Personal Information"
+            description="Start with the basics. Employers need to know who you are and how to contact you."
+            icon={
+              <div className="icon-circle">
+                <User size={20} />
+              </div>
+            }
+            isOpen={true}
+            onToggle={() => {}}
+            badge="Required">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormInput
+                label="Full Name"
+                value={resume.name}
+                onChange={(e) => updateResumeField("name", e.target.value)}
+                placeholder="e.g. John Doe"
+              />
+              <FormInput
+                label="Job Title"
+                value={resume.title}
+                onChange={(e) => updateResumeField("title", e.target.value)}
+                aiContext="Job Title"
+                placeholder="e.g. Software Engineer"
+              />
+              <FormInput
+                label="Phone"
+                value={resume.phone}
+                onChange={(e) => updateResumeField("phone", e.target.value)}
+                placeholder="+1 234 567 890"
+              />
+              <FormInput
+                label="Email"
+                value={resume.email}
+                onChange={(e) => updateResumeField("email", e.target.value)}
+                placeholder="john@example.com"
+              />
+            </div>
+
+            <div className="mt-6">
+              <label className="form-label mb-2 block">Social Links</label>
+              {resume.social_links.map((link, i) => (
+                <div key={i} className="flex gap-3 mb-3 items-start">
+                  <FormInput
+                    placeholder="Platform (e.g. LinkedIn)"
+                    containerStyle={{ marginBottom: 0, flex: 1 }}
+                    value={link.name}
+                    onChange={(e) =>
+                      handleSocialChange(i, { name: e.target.value })
+                    }
+                  />
+                  <FormInput
+                    placeholder="URL (https://...)"
+                    containerStyle={{ marginBottom: 0, flex: 2 }}
+                    value={link.url}
+                    onChange={(e) =>
+                      handleSocialChange(i, { url: e.target.value })
+                    }
+                  />
+                  <button
+                    className="btn btn-ghost text-red-500 hover:bg-red-50 p-2 rounded-md transition-colors"
+                    onClick={() => removeSocialLink(i)}
+                    title="Remove Link">
+                    <svg
+                      width="18"
+                      height="18"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              ))}
+              <button
+                className="btn btn-secondary text-xs mt-1"
+                onClick={addSocialLink}>
+                + Add Link
+              </button>
+            </div>
+          </ResumeSection>
+        )}
+
+        {activeSection === "summary" && (
+          <ResumeSection
+            title="Professional Summary"
+            description="Write a short summary of your background and career goals."
+            icon={
+              <div className="icon-circle">
+                <FileText size={20} />
+              </div>
+            }
+            isOpen={true}
+            onToggle={() => {}}
+            badge="Required">
+            <FormInput
+              textarea
+              label="Summary"
+              value={resume.summary}
+              onChange={(e) => updateResumeField("summary", e.target.value)}
+              aiContext="Professional Resume Summary"
+              placeholder="Experienced software developer with a focus on..."
+              className="min-h-[200px]"
+            />
+          </ResumeSection>
+        )}
+
+        {activeSection === "education" && (
+          <ResumeSection
+            title="Education"
+            description="Add your academic background."
+            icon={
+              <div className="icon-circle">
+                <GraduationCap size={20} />
+              </div>
+            }
+            isOpen={true}
+            onToggle={() => {}}
+            badge="Required">
+            {resume.education.map((edu, i) => (
+              <div
+                key={i}
+                className="bg-slate-50 p-4 rounded-lg mb-6 border border-slate-100 relative group">
+                <button
+                  className="absolute top-3 right-3 text-red-500 bg-red-50 hover:bg-red-100 p-1.5 rounded-md transition-all opacity-100 shadow-sm border border-red-100"
+                  onClick={() => removeEducation(i)}
+                  title="Remove Entry">
+                  <svg
+                    width="16"
+                    height="16"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                    />
+                  </svg>
+                </button>
+                <h4 className="text-sm font-bold text-slate-700 uppercase tracking-wide mb-3">
+                  Item {i + 1}
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormInput
+                    label="Institution"
+                    value={edu.institution}
+                    onChange={(e) =>
+                      handleEducationChange(i, {
+                        institution: e.target.value,
+                      })
+                    }
+                    placeholder="University Name"
+                  />
+                  <FormInput
+                    label="Degree"
+                    value={edu.degree}
+                    onChange={(e) =>
+                      handleEducationChange(i, { degree: e.target.value })
+                    }
+                    placeholder="Bachelor of Science"
+                  />
+                  <FormInput
+                    label="Grade/GPA"
+                    value={edu.grade}
+                    onChange={(e) =>
+                      handleEducationChange(i, { grade: e.target.value })
+                    }
+                    placeholder="3.8/4.0"
+                  />
+                  <FormInput
+                    label="Date Period"
+                    value={edu.duration}
+                    onChange={(e) =>
+                      handleEducationChange(i, { duration: e.target.value })
+                    }
+                    placeholder="Sep 2018 - Jun 2022"
+                  />
+                </div>
+              </div>
+            ))}
+            <button
+              className="btn btn-primary w-full shadow-lg shadow-indigo-100"
+              onClick={addEducation}>
+              + Add Education
+            </button>
+          </ResumeSection>
+        )}
+
+        {activeSection === "experience" && (
+          <ResumeSection
+            title="Work Experience"
+            description="List your relevant work experience, starting with the most recent."
+            icon={
+              <div className="icon-circle">
+                <Briefcase size={20} />
+              </div>
+            }
+            isOpen={true}
+            onToggle={() => {}}>
+            {resume.experiences.map((exp, i) => (
+              <div
+                key={i}
+                className="bg-slate-50 p-4 rounded-lg mb-6 border border-slate-100 relative group">
+                <button
+                  className="absolute top-3 right-3 text-red-500 bg-red-50 hover:bg-red-100 p-1.5 rounded-md transition-all opacity-100 shadow-sm border border-red-100"
+                  onClick={() => removeExperience(i)}
+                  title="Remove Entry">
+                  <svg
+                    width="16"
+                    height="16"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                    />
+                  </svg>
+                </button>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <FormInput
+                    label="Job Role"
+                    value={exp.role}
+                    onChange={(e) =>
+                      handleExperienceChange(i, { role: e.target.value })
+                    }
+                    aiContext="Job Role Title"
+                    placeholder="Software Engineer"
+                  />
+                  <FormInput
+                    label="Company"
+                    value={exp.org}
+                    onChange={(e) =>
+                      handleExperienceChange(i, { org: e.target.value })
+                    }
+                    placeholder="Acme Corp"
+                  />
+                  <FormInput
+                    label="Location"
+                    value={exp.location}
+                    onChange={(e) =>
+                      handleExperienceChange(i, {
+                        location: e.target.value,
+                      })
+                    }
+                    placeholder="New York, NY"
+                  />
+                  <FormInput
+                    label="Duration"
+                    value={exp.duration}
+                    onChange={(e) =>
+                      handleExperienceChange(i, {
+                        duration: e.target.value,
+                      })
+                    }
+                    placeholder="Jan 2022 - Present"
+                  />
+                </div>
+
+                <div className="pl-2 border-l-2 border-slate-200">
+                  <label className="form-label mb-2 block text-slate-500">
+                    Responsibilities
+                  </label>
+                  {exp.bullets.map((b, bi) => (
+                    <div key={bi} className="flex gap-2 mb-2">
+                      <FormInput
+                        containerStyle={{ marginBottom: 0, flex: 1 }}
+                        value={b}
+                        onChange={(e) => {
+                          const newBullets = [...exp.bullets];
+                          newBullets[bi] = e.target.value;
+                          handleExperienceChange(i, {
+                            bullets: newBullets,
+                          });
+                        }}
+                        aiContext={`Resume bullet point for ${exp.role}`}
+                        placeholder="• Developed a feature that..."
+                      />
+                      <button
+                        className="btn btn-ghost text-slate-400 hover:text-red-500"
+                        onClick={() => {
+                          const newBullets = [...exp.bullets];
+                          newBullets.splice(bi, 1);
+                          handleExperienceChange(i, {
+                            bullets: newBullets,
+                          });
+                        }}>
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    className="btn btn-secondary text-xs mt-1"
+                    onClick={() =>
+                      handleExperienceChange(i, {
+                        bullets: [...exp.bullets, ""],
+                      })
+                    }>
+                    + Add Bullet
+                  </button>
+                </div>
+              </div>
+            ))}
+            <button
+              className="btn btn-primary w-full shadow-lg shadow-indigo-100"
+              onClick={addExperience}>
+              + Add Experience
+            </button>
+          </ResumeSection>
+        )}
+
+        {activeSection === "projects" && (
+          <ResumeSection
+            title="Projects"
+            description="Showcase your best work."
+            icon={
+              <div className="icon-circle">
+                <FolderGit2 size={20} />
+              </div>
+            }
+            isOpen={true}
+            onToggle={() => {}}>
+            {resume.projects.map((proj, i) => (
+              <div
+                key={i}
+                className="bg-slate-50 p-4 rounded-lg mb-6 border border-slate-100 relative group">
+                <button
+                  className="absolute top-3 right-3 text-red-500 bg-red-50 hover:bg-red-100 p-1.5 rounded-md transition-all opacity-100 shadow-sm border border-red-100"
+                  onClick={() => removeProject(i)}
+                  title="Remove Entry">
+                  <svg
+                    width="16"
+                    height="16"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                    />
+                  </svg>
+                </button>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                  <FormInput
+                    label="Project Title"
+                    value={proj.title}
+                    onChange={(e) =>
+                      handleProjectChange(i, { title: e.target.value })
+                    }
+                    placeholder="My Awesome App"
+                  />
+                  <FormInput
+                    label="Date"
+                    value={proj.date}
+                    onChange={(e) =>
+                      handleProjectChange(i, { date: e.target.value })
+                    }
+                    placeholder="2023"
+                  />
+                </div>
+                <FormInput
+                  label="Tech Stack / Subtitle"
+                  value={proj.subtitle}
+                  onChange={(e) =>
+                    handleProjectChange(i, { subtitle: e.target.value })
+                  }
+                  placeholder="React, Node.js, TypeScript"
+                  aiContext="Project Technologies"
+                />
+
+                <div className="mt-3 pl-2 border-l-2 border-slate-200">
+                  <label className="form-label mb-2 block text-slate-500">
+                    Details
+                  </label>
+                  {proj.bullets.map((b, bi) => (
+                    <div key={bi} className="flex gap-2 mb-2">
+                      <FormInput
+                        containerStyle={{ marginBottom: 0, flex: 1 }}
+                        value={b}
+                        onChange={(e) => {
+                          const newBullets = [...proj.bullets];
+                          newBullets[bi] = e.target.value;
+                          handleProjectChange(i, { bullets: newBullets });
+                        }}
+                        aiContext="Project Bullet Point"
+                        placeholder="• Built a scalable backend..."
+                      />
+                      <button
+                        className="btn btn-ghost text-slate-400 hover:text-red-500"
+                        onClick={() => {
+                          const newBullets = [...proj.bullets];
+                          newBullets.splice(bi, 1);
+                          handleProjectChange(i, { bullets: newBullets });
+                        }}>
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    className="btn btn-secondary text-xs mt-1"
+                    onClick={() =>
+                      handleProjectChange(i, {
+                        bullets: [...proj.bullets, ""],
+                      })
+                    }>
+                    + Add Detail
+                  </button>
+                </div>
+              </div>
+            ))}
+            <button
+              className="btn btn-primary w-full shadow-lg shadow-indigo-100"
+              onClick={addProject}>
+              + Add Project
+            </button>
+          </ResumeSection>
+        )}
+
+        {activeSection === "skills" && (
+          <ResumeSection
+            title="Skills & Interests"
+            icon={
+              <div className="icon-circle">
+                <Zap size={20} />
+              </div>
+            }
+            isOpen={true}
+            onToggle={() => {}}>
+            <div className="grid grid-cols-1 gap-5">
+              <FormInput
+                label="Languages"
+                value={resume.skills.languages}
+                onChange={(e) => updateSkills("languages", e.target.value)}
+                placeholder="Java, Python, C++"
+              />
+              <FormInput
+                label="Frameworks"
+                value={resume.skills.frameworks}
+                onChange={(e) => updateSkills("frameworks", e.target.value)}
+                placeholder="React, Spring Boot"
+              />
+              <FormInput
+                label="Tools"
+                value={resume.skills.web_tools}
+                onChange={(e) => updateSkills("web_tools", e.target.value)}
+                placeholder="Git, Docker, AWS"
+              />
+              <FormInput
+                label="Databases"
+                value={resume.skills.cloud_databases}
+                onChange={(e) =>
+                  updateSkills("cloud_databases", e.target.value)
+                }
+                placeholder="PostgreSQL, MongoDB"
+              />
+              <FormInput
+                textarea
+                label="Relevant Coursework"
+                value={resume.skills.coursework}
+                onChange={(e) => updateSkills("coursework", e.target.value)}
+                placeholder="Data Structures, Algorithms..."
+              />
+            </div>
+          </ResumeSection>
+        )}
+
+        {activeSection === "layout" && (
+          <ResumeSection
+            title="Layout Settings"
+            description="Fine-tune your resume's spacing."
+            icon={
+              <div className="icon-circle">
+                <LayoutTemplate size={20} />
+              </div>
+            }
+            isOpen={true}
+            onToggle={() => {}}>
+            <div className="grid grid-cols-2 gap-4">
+              <FormInput
+                label="Section Spacing Top"
+                value={resume.layout.section_spacing_top}
+                onChange={(e) =>
+                  updateLayout("section_spacing_top", e.target.value)
+                }
+              />
+              <FormInput
+                label="Section Spacing Bottom"
+                value={resume.layout.section_spacing_bottom}
+                onChange={(e) =>
+                  updateLayout("section_spacing_bottom", e.target.value)
+                }
+              />
+              <FormInput
+                label="Section Spacing After"
+                value={resume.layout.section_spacing_after}
+                onChange={(e) =>
+                  updateLayout("section_spacing_after", e.target.value)
+                }
+              />
+              <FormInput
+                label="Bullet Spacing"
+                value={resume.layout.bullet_spacing}
+                onChange={(e) => updateLayout("bullet_spacing", e.target.value)}
+              />
+            </div>
+          </ResumeSection>
+        )}
+      </div>
+    </main>
+  );
+};
