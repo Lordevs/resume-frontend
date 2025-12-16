@@ -11,22 +11,22 @@ interface ResumeSectionProps {
   rightElement?: ReactNode;
 }
 
-const ChevronIcon = ({ open }: { open: boolean }) => (
-  <svg
-    width="20"
-    height="20"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-    strokeWidth={2}
-    style={{
-      transform: open ? "rotate(180deg)" : "rotate(0deg)", // Fixed rotation logic
-      transition: "transform 0.2s ease",
-      color: "#94a3b8",
-    }}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-  </svg>
-);
+// const ChevronIcon = ({ open }: { open: boolean }) => (
+//   <svg
+//     width="20"
+//     height="20"
+//     fill="none"
+//     viewBox="0 0 24 24"
+//     stroke="currentColor"
+//     strokeWidth={2}
+//     style={{
+//       transform: open ? "rotate(180deg)" : "rotate(0deg)", // Fixed rotation logic
+//       transition: "transform 0.2s ease",
+//       color: "#94a3b8",
+//     }}>
+//     <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+//   </svg>
+// );
 
 export const ResumeSection: React.FC<ResumeSectionProps> = ({
   title,
@@ -74,7 +74,7 @@ export const ResumeSection: React.FC<ResumeSectionProps> = ({
         </div>
         <div className="flex items-center gap-2">
           {rightElement}
-          <ChevronIcon open={isOpen} />
+          {/* <ChevronIcon open={isOpen} /> */}
         </div>
       </div>
 
