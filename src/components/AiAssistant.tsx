@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { generateContent } from "../api/gemini";
 import { Resume } from "../types";
+import { toast } from "react-toastify";
 
 /* --- Icons --- */
 const SparklesIcon = () => (
@@ -293,7 +294,7 @@ export default function AiAssistant({ onApplyResume }: AiAssistantProps) {
   const handleGenerate = async (isFullResume: boolean = false) => {
     if (!prompt.trim() && !file) {
       if (isFullResume && !file && !prompt.trim()) {
-        alert(
+        toast.info(
           "Please upload a resume or provide some details (like a LinkedIn bio) to generate a full resume."
         );
         return;
@@ -369,7 +370,7 @@ export default function AiAssistant({ onApplyResume }: AiAssistantProps) {
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(result);
-    alert("Copied to clipboard!");
+    toast.success("Copied to clipboard!");
   };
 
   const onFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {

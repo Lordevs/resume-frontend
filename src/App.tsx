@@ -7,9 +7,10 @@ import {
   SocialLink,
 } from "./types";
 import { fetchResume, saveResume, renderLatex, renderPdf } from "./api";
-import AiAssistant from "./components/AiAssistant";
 import { ResumeSection } from "./components/ResumeSection";
 import { FormInput } from "./components/FormInput";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 
 import {
@@ -21,6 +22,7 @@ import {
   LayoutTemplate,
   FileText,
 } from "lucide-react";
+import AiAssistant from "./components/AiAssistant";
 
 interface ValidationResult {
   ok: boolean;
@@ -217,7 +219,7 @@ const App: React.FC = () => {
 
   const addSocialLink = () => {
     if (resume.social_links.length >= 4) {
-      alert("Max 4 links allowed.");
+      toast.warning("Max 4 links allowed.");
       return;
     }
     setResume({
@@ -291,7 +293,7 @@ const App: React.FC = () => {
 
   const handleDownloadPdf = async () => {
     if (!validation.ok) {
-      alert(
+      toast.error(
         "Please check the 'Action Required' block in the editor for validation errors before downloading."
       );
       return;
@@ -312,7 +314,7 @@ const App: React.FC = () => {
       setTimeout(() => URL.revokeObjectURL(url), 100);
     } catch (err: any) {
       console.error("PDF error", err);
-      alert(`Failed to generate PDF. Error: ${err.message}`);
+      toast.error(`Failed to generate PDF. Error: ${err.message}`);
     } finally {
       setDownloading(false);
     }
@@ -339,6 +341,7 @@ const App: React.FC = () => {
 
   return (
     <div className="app-container">
+      <ToastContainer position="top-right" autoClose={3000} />
       {/* Top Header - Minimal */}
       <header className="bg-white border-b border-slate-200 px-6 py-3 flex justify-between items-center shadow-sm z-10">
         <div className="flex items-center gap-3">
