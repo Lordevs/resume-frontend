@@ -282,7 +282,7 @@ export default function AiAssistant({
             {/* Presets */}
             <div className="ai-chip-container">
               <button
-                className="ai-chip"
+                className="ai-chip flex flex-row items-center gap-2"
                 onClick={() =>
                   applyPreset(
                     "Write a professional summary for a software engineer with 3 years experience in React and Node.js."
@@ -291,7 +291,7 @@ export default function AiAssistant({
                 <PenTool size={14} /> Write Summary
               </button>
               <button
-                className="ai-chip"
+                className="ai-chip flex flex-row items-center gap-2"
                 onClick={() =>
                   applyPreset(
                     "Rewrite these bullet points to be more impactful using STAR method:\n- "
@@ -300,7 +300,7 @@ export default function AiAssistant({
                 <Zap size={14} /> Enhance Bullets
               </button>
               <button
-                className="ai-chip"
+                className="ai-chip flex flex-row items-center gap-2"
                 onClick={() =>
                   applyPreset(
                     "Analyze the attached resume against a job description I will paste below."
