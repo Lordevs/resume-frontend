@@ -64,21 +64,8 @@ export const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
         <AiAssistant
           onApplyResume={onApplyResume}
           trigger={({ onClick }) => (
-            <button
-              className="nav-item-card"
-              onClick={onClick}
-              style={{
-                width: "100%",
-                background: "var(--primary)",
-                color: "white",
-                border: "none",
-              }}>
-              <div
-                className="nav-icon-container"
-                style={{
-                  background: "rgba(255, 255, 255, 0.2)",
-                  color: "white",
-                }}>
+            <button className="nav-item-card ai-nav-button" onClick={onClick}>
+              <div className="nav-icon-container ai-nav-icon">
                 <Zap size={20} />
               </div>
               <span className="nav-label">AI Assistant</span>
