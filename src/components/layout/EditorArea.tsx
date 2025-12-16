@@ -112,8 +112,20 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
     return () => observer.disconnect();
   }, [setActiveSection]);
 
+  const handleScroll = (e: React.UIEvent<HTMLElement>) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+    // Check if we are close to the bottom (e.g., within 50px)
+    if (scrollHeight - scrollTop <= clientHeight + 50) {
+      if (typeof setActiveSection === "function") {
+        setActiveSection("layout");
+      }
+    }
+  };
+
   return (
-    <main className="editor-area custom-scrollbar">
+    <main
+      className="editor-area custom-scrollbar pb-[50vh]"
+      onScroll={handleScroll}>
       {Object.keys(validation.errorsBySection).length > 0 && (
         <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r max-w-[800px] mx-auto">
           <div className="flex items-start">
