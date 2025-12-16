@@ -21,14 +21,6 @@ import { ResumeSection } from "../ResumeSection";
 import { FormInput } from "../FormInput";
 import { ValidationResult } from "../../handlers/useResume";
 
-console.log("DEBUG: EditorArea Imports", {
-  ResumeSection,
-  FormInput,
-  Trash2,
-  X,
-  LayoutTemplate,
-});
-
 interface EditorAreaProps {
   resume: Resume;
   activeSection: string;

@@ -27,82 +27,6 @@ export const useResume = () => {
   const [downloading, setDownloading] = useState(false);
 
   // Helper Functions
-  const escapeLatex = (str: string): string => {
-    if (!str) return "";
-    let escaped = str;
-    escaped = escaped.replace(/\\/g, "\\textbackslash ");
-    escaped = escaped.replace(/([&%$#_{}])/g, "\\$1");
-    escaped = escaped.replace(/~/g, "\\textasciitilde ");
-    escaped = escaped.replace(/\^/g, "\\textasciicircum ");
-    escaped = escaped.trim().replace(/\n+/g, " \\\\ ");
-    return escaped;
-  };
-
-  //   const fixLatexDimension = (val: string): string => {
-  //     if (!val) return "0pt";
-  //     const trimmed = val.trim();
-  //     if (/^-?\d+(\.\d+)?$/.test(trimmed)) {
-  //       return `${trimmed}pt`;
-  //     }
-  //     if (/^-?\d+(\.\d+)?\s*(pt|mm|cm|in|ex|em|pc|bp|dd|cc|sp)$/i.test(trimmed)) {
-  //       return trimmed;
-  //     }
-  //     return "0pt";
-  //   };
-
-  const sanitizeResume = (r: Resume): Resume => {
-    const clean = JSON.parse(JSON.stringify(r)) as Resume;
-
-    const sanitizeField = (obj: any, key: string) => {
-      if (typeof obj[key] === "string") {
-        obj[key] = escapeLatex(obj[key]);
-      }
-    };
-
-    sanitizeField(clean, "name");
-    sanitizeField(clean, "title");
-    sanitizeField(clean, "phone");
-    sanitizeField(clean, "email");
-    sanitizeField(clean, "summary");
-
-    clean.social_links.forEach((link) => {
-      sanitizeField(link, "name");
-      sanitizeField(link, "url");
-    });
-
-    clean.education.forEach((edu) => {
-      sanitizeField(edu, "degree");
-      sanitizeField(edu, "grade");
-      sanitizeField(edu, "institution");
-      sanitizeField(edu, "duration");
-    });
-
-    clean.experiences.forEach((exp) => {
-      sanitizeField(exp, "role");
-      sanitizeField(exp, "org");
-      sanitizeField(exp, "location");
-      sanitizeField(exp, "duration");
-      exp.bullets = exp.bullets.map(escapeLatex);
-    });
-
-    clean.projects.forEach((proj) => {
-      sanitizeField(proj, "title");
-      sanitizeField(proj, "subtitle");
-      sanitizeField(proj, "date");
-      proj.bullets = proj.bullets.map(escapeLatex);
-    });
-
-    Object.keys(clean.skills).forEach((key) => {
-      sanitizeField(clean.skills, key);
-    });
-
-    // Object.keys(clean.layout).forEach((key) => {
-    //   const k = key as keyof typeof clean.layout;
-    //   clean.layout[k] = fixLatexDimension(String(clean.layout[k]));
-    // });
-
-    return clean;
-  };
 
   const validateResume = (resume: Resume): ValidationResult => {
     const errorsBySection: Record<string, string[]> = {};
@@ -268,28 +192,35 @@ export const useResume = () => {
   };
 
   const handleFullResumeApply = (newResume: Resume) => {
-    setResume(newResume);
+    if (!resume) {
+      setResume(newResume);
+      return;
+    }
+    // Merge with default layout to ensure consistency if AI misses it
+    const merged = {
+      ...resume,
+      ...newResume,
+      layout: { ...resume.layout, ...(newResume.layout || {}) },
+    };
+    setResume(merged);
   };
 
   const handleGeneratePreview = () => {
     if (resume) {
-      const cleanResume = sanitizeResume(resume);
-      renderLatex(cleanResume).then(setLatex).catch(console.error);
+      renderLatex(resume).then(setLatex).catch(console.error);
     }
   };
 
   const handleDownloadPdf = async () => {
     if (!validation.ok) {
-      toast.error(
-        "Please check the 'Action Required' block in the editor for validation errors before downloading."
-      );
+      toast.error("Fixed validation issues first.");
       return;
     }
     setDownloading(true);
     try {
       if (resume) {
-        const cleanResume = sanitizeResume(resume);
-        const blob = await renderPdf(cleanResume);
+        // NOTE: User requested applying this logic which omits sanitizeResume
+        const blob = await renderPdf(resume);
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
@@ -301,7 +232,7 @@ export const useResume = () => {
       }
     } catch (err: any) {
       console.error("PDF error", err);
-      toast.error(`Failed to generate PDF. Error: ${err.message}`);
+      toast.error("Failed to generate PDF.");
     } finally {
       setDownloading(false);
     }
