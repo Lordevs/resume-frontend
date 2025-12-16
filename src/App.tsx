@@ -126,12 +126,104 @@ const App: React.FC = () => {
       .catch(console.error);
   }, []);
 
-  // Auto-generate LaTeX effect
+  /* ---------- Helpers ---------- */
+
+  // Basic LaTeX escaping to prevent syntax errors on the backend
+  const escapeLatex = (str: string): string => {
+    if (!str) return "";
+    let escaped = str;
+    // Escape backslash first to avoid escaping the escapes
+    escaped = escaped.replace(/\\/g, "\\textbackslash ");
+    // Escape other special chars. Note: We do NOT escape { } here because they might be part of valid logic if we assume input is plain text.
+    // However, for resume content, { } are usually just text.
+    // If we escape them to \{ \}, it prints braces.
+    escaped = escaped.replace(/([&%$#_{}])/g, "\\$1");
+    escaped = escaped.replace(/~/g, "\\textasciitilde ");
+    escaped = escaped.replace(/\^/g, "\\textasciicircum ");
+    // Replace newlines with double backslash for line breaks
+    escaped = escaped.replace(/\n/g, " \\\\ ");
+    return escaped;
+  };
+
+  // Ensure a string is a valid LaTeX dimension (e.g., "10pt", "0.5cm").
+  // If invalid or just a number, fix it.
+  const fixLatexDimension = (val: string): string => {
+    if (!val) return "0pt";
+    const trimmed = val.trim();
+    // If it's just a number, assume pt
+    if (/^-?\d+(\.\d+)?$/.test(trimmed)) {
+      return `${trimmed}pt`;
+    }
+    // proper regex for latex units: pt, mm, cm, in, ex, em, pc, bp, dd, cc, sp
+    // allow flexible spacing
+    if (/^-?\d+(\.\d+)?\s*(pt|mm|cm|in|ex|em|pc|bp|dd|cc|sp)$/i.test(trimmed)) {
+      return trimmed;
+    }
+    // If it acts like a unit but is invalid (e.g. "2m"), fallback to 0pt to prevent crash
+    return "0pt";
+  };
+
+  const sanitizeResume = (r: Resume): Resume => {
+    // Deep clone to avoid mutating state
+    const clean = JSON.parse(JSON.stringify(r)) as Resume;
+
+    const sanitizeField = (obj: any, key: string) => {
+      if (typeof obj[key] === "string") {
+        obj[key] = escapeLatex(obj[key]);
+      }
+    };
+
+    sanitizeField(clean, "name");
+    sanitizeField(clean, "title");
+    sanitizeField(clean, "phone");
+    sanitizeField(clean, "email");
+    sanitizeField(clean, "summary");
+
+    clean.social_links.forEach((link) => {
+      sanitizeField(link, "name");
+      sanitizeField(link, "url");
+    });
+
+    clean.education.forEach((edu) => {
+      sanitizeField(edu, "degree");
+      sanitizeField(edu, "grade");
+      sanitizeField(edu, "institution");
+      sanitizeField(edu, "duration");
+    });
+
+    clean.experiences.forEach((exp) => {
+      sanitizeField(exp, "role");
+      sanitizeField(exp, "org");
+      sanitizeField(exp, "location");
+      sanitizeField(exp, "duration");
+      exp.bullets = exp.bullets.map(escapeLatex);
+    });
+
+    clean.projects.forEach((proj) => {
+      sanitizeField(proj, "title");
+      sanitizeField(proj, "subtitle");
+      sanitizeField(proj, "date");
+      proj.bullets = proj.bullets.map(escapeLatex);
+    });
+
+    Object.keys(clean.skills).forEach((key) => {
+      sanitizeField(clean.skills, key);
+    });
+
+    // Sanitize Layout Settings - enforce valid dimensions
+    Object.keys(clean.layout).forEach((key) => {
+      // cast key to keyof LayoutSettings to avoid TS errors if possible, or just string access is fine since we deep cloned
+      const k = key as keyof typeof clean.layout;
+      clean.layout[k] = fixLatexDimension(String(clean.layout[k]));
+    });
+
+    return clean;
+  };
+
+  // Auto-generate LaTeX effect removed in favor of manual button
   useEffect(() => {
     if (resume) {
       setValidation(validateResume(resume));
-      // Debounce or just run it. For now, immediate is fine for local.
-      renderLatex(resume).then(setLatex).catch(console.error);
     }
   }, [resume]);
 
@@ -231,14 +323,25 @@ const App: React.FC = () => {
     setResume(newResume);
   };
 
+  const handleGeneratePreview = () => {
+    if (resume) {
+      const cleanResume = sanitizeResume(resume);
+      renderLatex(cleanResume).then(setLatex).catch(console.error);
+    }
+  };
+
   const handleDownloadPdf = async () => {
     if (!validation.ok) {
-      alert("Fix validation issues first.");
+      alert(
+        "Please check the 'Action Required' block in the editor for validation errors before downloading."
+      );
       return;
     }
     setDownloading(true);
     try {
-      const blob = await renderPdf(resume);
+      // Use sanitized resume for PDF generation
+      const cleanResume = sanitizeResume(resume);
+      const blob = await renderPdf(cleanResume);
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -246,9 +349,11 @@ const App: React.FC = () => {
       document.body.appendChild(a);
       a.click();
       a.remove();
-      URL.revokeObjectURL(url);
-    } catch (err) {
+      // Small delay to ensure download starts before revoking
+      setTimeout(() => URL.revokeObjectURL(url), 100);
+    } catch (err: any) {
       console.error("PDF error", err);
+      alert(`Failed to generate PDF. Error: ${err.message}`);
     } finally {
       setDownloading(false);
     }
@@ -289,9 +394,14 @@ const App: React.FC = () => {
             Save Progress
           </button>
           <button
+            className="btn btn-secondary text-sm"
+            onClick={handleGeneratePreview}>
+            LaTeX Preview
+          </button>
+          <button
             className="btn btn-primary text-sm shadow-indigo-200 shadow-md"
-            disabled={buttonsDisabled || downloading}
-            style={{ opacity: buttonsDisabled || downloading ? 0.7 : 1 }}
+            disabled={downloading}
+            style={{ opacity: downloading ? 0.7 : 1 }}
             onClick={handleDownloadPdf}>
             {downloading ? "Generating..." : "Download PDF"}
           </button>
@@ -895,14 +1005,11 @@ const App: React.FC = () => {
         <aside className="preview-area">
           <div className="preview-header">
             <h3 className="text-sm font-bold text-slate-700 m-0">
-              Live Preview
+              LaTeX Output Preview
             </h3>
-            <span className="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded">
-              LaTeX Output
-            </span>
           </div>
           <div className="preview-content custom-scrollbar">
-            {latex || "Generating preview..."}
+            {latex || "Generating LaTeX preview..."}
           </div>
         </aside>
       </div>
