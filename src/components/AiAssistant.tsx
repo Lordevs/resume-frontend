@@ -4,16 +4,64 @@ import { Resume } from "../types";
 
 /* --- Icons --- */
 const SparklesIcon = () => (
-  <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>
+  <svg
+    width="20"
+    height="20"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    strokeWidth={2}>
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+    />
+  </svg>
 );
 const XIcon = () => (
-  <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+  <svg
+    width="20"
+    height="20"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    strokeWidth={2}>
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M6 18L18 6M6 6l12 12"
+    />
+  </svg>
 );
 const CopyIcon = () => (
-  <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+  <svg
+    width="14"
+    height="14"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    strokeWidth={2}>
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+    />
+  </svg>
 );
 const PaperClipIcon = () => (
-  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" /></svg>
+  <svg
+    width="16"
+    height="16"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    strokeWidth={2}>
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"
+    />
+  </svg>
 );
 
 /* --- Styles (Inline for portability) --- */
@@ -205,9 +253,31 @@ export default function AiAssistant({ onApplyResume }: AiAssistantProps) {
     phone: "string",
     summary: "string",
     social_links: [{ name: "string", url: "string" }],
-    education: [{ degree: "string", grade: "string", institution: "string", duration: "string" }],
-    experiences: [{ role: "string", org: "string", location: "string", duration: "string", bullets: ["string"] }],
-    projects: [{ title: "string", subtitle: "string", date: "string", bullets: ["string"] }],
+    education: [
+      {
+        degree: "string",
+        grade: "string",
+        institution: "string",
+        duration: "string",
+      },
+    ],
+    experiences: [
+      {
+        role: "string",
+        org: "string",
+        location: "string",
+        duration: "string",
+        bullets: ["string"],
+      },
+    ],
+    projects: [
+      {
+        title: "string",
+        subtitle: "string",
+        date: "string",
+        bullets: ["string"],
+      },
+    ],
     skills: {
       languages: "string",
       frameworks: "string",
@@ -216,14 +286,16 @@ export default function AiAssistant({ onApplyResume }: AiAssistantProps) {
       cloud_databases: "string",
       coursework: "string",
       areas_of_interest: "string",
-      soft_skills: "string"
-    }
+      soft_skills: "string",
+    },
   };
 
   const handleGenerate = async (isFullResume: boolean = false) => {
     if (!prompt.trim() && !file) {
       if (isFullResume && !file && !prompt.trim()) {
-        alert("Please upload a resume or provide some details (like a LinkedIn bio) to generate a full resume.");
+        alert(
+          "Please upload a resume or provide some details (like a LinkedIn bio) to generate a full resume."
+        );
         return;
       }
       if (!isFullResume) return;
@@ -249,7 +321,8 @@ export default function AiAssistant({ onApplyResume }: AiAssistantProps) {
         3. Make the content professional and concise.
         `;
 
-        if (!userPrompt) userPrompt = "Generate a professional resume from the attached file.";
+        if (!userPrompt)
+          userPrompt = "Generate a professional resume from the attached file.";
       }
 
       const text = await generateContent({
@@ -261,25 +334,31 @@ export default function AiAssistant({ onApplyResume }: AiAssistantProps) {
       if (isFullResume && onApplyResume) {
         try {
           // strip backticks if gemini adds them despite instructions
-          const cleaned = text.replace(/```json/g, "").replace(/```/g, "").trim();
+          const cleaned = text
+            .replace(/```json/g, "")
+            .replace(/```/g, "")
+            .trim();
           const json = JSON.parse(cleaned);
 
           // Basic validation
-          if (json && typeof json === 'object') {
+          if (json && typeof json === "object") {
             onApplyResume(json as Resume);
-            setResult("Resume successfully generated and applied! Close this window to verify.");
+            setResult(
+              "Resume successfully generated and applied! Close this window to verify."
+            );
             setIsOpen(false);
           } else {
             setResult("AI generated invalid JSON. Please try again.");
           }
         } catch (e) {
           console.error("JSON Parse Error", e);
-          setResult(`Failed to parse AI response into Resume format.\nRaw output:\n${text}`);
+          setResult(
+            `Failed to parse AI response into Resume format.\nRaw output:\n${text}`
+          );
         }
       } else {
         setResult(text || "No response generated.");
       }
-
     } catch (err) {
       setResult("Error connecting to Gemini. Please check your API key.");
       console.error(err);
@@ -309,74 +388,121 @@ export default function AiAssistant({ onApplyResume }: AiAssistantProps) {
       <button
         style={styles.fab}
         onClick={() => setIsOpen(true)}
-        title="Open AI Assistant"
-      >
+        title="Open AI Assistant">
         <SparklesIcon />
       </button>
 
       {/* Backdrop */}
-      {isOpen && <div style={styles.overlay} onClick={() => setIsOpen(false)} />}
+      {isOpen && (
+        <div style={styles.overlay} onClick={() => setIsOpen(false)} />
+      )}
 
       {/* Drawer */}
-      <div style={{ ...styles.drawer, transform: isOpen ? "translateX(0)" : "translateX(100%)" }}>
-
+      <div
+        style={{
+          ...styles.drawer,
+          transform: isOpen ? "translateX(0)" : "translateX(100%)",
+        }}>
         {/* Header */}
         <div style={styles.header}>
           <div>
-            <h2 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#0f172a" }}>AI Assistant</h2>
-            <div style={{ fontSize: 12, color: "#64748b", display: "flex", alignItems: "center", gap: 6 }}>
-              Powered by <span style={{ fontWeight: 600, color: "#2563eb" }}>Gemini 2.5 Flash</span>
+            <h2
+              style={{
+                margin: 0,
+                fontSize: 18,
+                fontWeight: 700,
+                color: "#0f172a",
+              }}>
+              AI Assistant
+            </h2>
+            <div
+              style={{
+                fontSize: 12,
+                color: "#64748b",
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+              }}>
+              Powered by{" "}
+              <span style={{ fontWeight: 600, color: "#2563eb" }}>
+                Gemini 2.5 Flash
+              </span>
             </div>
           </div>
           <button
             onClick={() => setIsOpen(false)}
-            style={{ border: "none", background: "transparent", cursor: "pointer", color: "#94a3b8" }}
-          >
+            style={{
+              border: "none",
+              background: "transparent",
+              cursor: "pointer",
+              color: "#94a3b8",
+            }}>
             <XIcon />
           </button>
         </div>
 
         {/* Content */}
         <div style={styles.content}>
-
           {/* Main Action for Full Resume */}
           {onApplyResume && (
             <div style={{ marginBottom: 10 }}>
               <button
                 style={styles.btnSpecial}
                 onClick={() => handleGenerate(true)}
-                disabled={loading}
-              >
-                {loading ? "Generating Full Resume..." : (
+                disabled={loading}>
+                {loading ? (
+                  "Generating Full Resume..."
+                ) : (
                   <>✨ Generate Full Resume from Context</>
                 )}
               </button>
-              <p style={{ fontSize: 11, color: "#64748b", textAlign: "center", marginTop: 6 }}>
+              <p
+                style={{
+                  fontSize: 11,
+                  color: "#64748b",
+                  textAlign: "center",
+                  marginTop: 6,
+                }}>
                 Upload a PDF or paste your bio below first!
               </p>
             </div>
           )}
 
-          <hr style={{ border: "none", borderTop: "1px solid #f1f5f9", margin: "0 0 10px 0" }} />
+          <hr
+            style={{
+              border: "none",
+              borderTop: "1px solid #f1f5f9",
+              margin: "0 0 10px 0",
+            }}
+          />
 
           {/* Presets */}
           <div style={styles.chipContainer}>
             <button
               style={styles.chip}
-              onClick={() => applyPreset("Write a professional summary for a software engineer with 3 years experience in React and Node.js.")}
-            >
+              onClick={() =>
+                applyPreset(
+                  "Write a professional summary for a software engineer with 3 years experience in React and Node.js."
+                )
+              }>
               ✍️ Write Summary
             </button>
             <button
               style={styles.chip}
-              onClick={() => applyPreset("Rewrite these bullet points to be more impactful using STAR method:\n- ")}
-            >
+              onClick={() =>
+                applyPreset(
+                  "Rewrite these bullet points to be more impactful using STAR method:\n- "
+                )
+              }>
               🚀 Enhance Bullets
             </button>
             <button
               style={styles.chip}
-              onClick={() => applyPreset("Analyze the attached resume against a job description I will paste below.")}
-            >
+              onClick={() =>
+                applyPreset(
+                  "Analyze the attached resume against a job description I will paste below."
+                )
+              }>
               🔍 Review Resume
             </button>
           </div>
@@ -390,16 +516,30 @@ export default function AiAssistant({ onApplyResume }: AiAssistantProps) {
           />
 
           {/* File Upload */}
-          <div style={styles.fileUpload} onClick={() => fileInputRef.current?.click()}>
+          <div
+            style={styles.fileUpload}
+            onClick={() => fileInputRef.current?.click()}>
             <PaperClipIcon />
-            <span style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+            <span
+              style={{
+                flex: 1,
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}>
               {file ? file.name : "Attach context (Resume PDF, Job Desc Image)"}
             </span>
             {file && (
               <span
-                style={{ color: "#ef4444", fontWeight: "bold", padding: "0 8px" }}
-                onClick={(e) => { e.stopPropagation(); setFile(null); }}
-              >
+                style={{
+                  color: "#ef4444",
+                  fontWeight: "bold",
+                  padding: "0 8px",
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setFile(null);
+                }}>
                 ✕
               </span>
             )}
@@ -416,10 +556,13 @@ export default function AiAssistant({ onApplyResume }: AiAssistantProps) {
           <button
             style={{ ...styles.btnPrimary, opacity: loading ? 0.7 : 1 }}
             onClick={() => handleGenerate(false)}
-            disabled={loading}
-          >
-            {loading ? "Thinking..." : (
-              <>Ask Assistant <SparklesIcon /></>
+            disabled={loading}>
+            {loading ? (
+              "Thinking..."
+            ) : (
+              <>
+                Ask Assistant <SparklesIcon />
+              </>
             )}
           </button>
 
@@ -430,14 +573,21 @@ export default function AiAssistant({ onApplyResume }: AiAssistantProps) {
                 <span>AI Suggestion</span>
                 <button
                   onClick={copyToClipboard}
-                  style={{ background: "transparent", border: "none", cursor: "pointer", color: "#2563eb", display: "flex", gap: 4, alignItems: "center", fontSize: 12, fontWeight: 600 }}
-                >
+                  style={{
+                    background: "transparent",
+                    border: "none",
+                    cursor: "pointer",
+                    color: "#2563eb",
+                    display: "flex",
+                    gap: 4,
+                    alignItems: "center",
+                    fontSize: 12,
+                    fontWeight: 600,
+                  }}>
                   <CopyIcon /> Copy
                 </button>
               </div>
-              <div style={styles.responseBody}>
-                {result}
-              </div>
+              <div style={styles.responseBody}>{result}</div>
             </div>
           )}
         </div>
