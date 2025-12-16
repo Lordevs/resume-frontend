@@ -52,7 +52,7 @@ body {
 
 .app-main {
   display: grid;
-  grid-template-columns: 320px 1fr 1fr; /* Increased Sidebar width */
+  grid-template-columns: 350px 1fr; /* Fixed sidebar, flexible content */
   height: 100%;
   overflow: hidden;
   gap: 1.5rem; /* Global gap for floating elements */
@@ -186,10 +186,10 @@ body {
 
 /* Form Styling */
 .form-field {
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.25rem;
 }
 
 .form-label {

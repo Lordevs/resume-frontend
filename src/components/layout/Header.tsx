@@ -1,15 +1,11 @@
 import React from "react";
 
 interface HeaderProps {
-  onSave: () => void;
-  onPreview: () => void;
   onDownload: () => void;
   isDownloading: boolean;
 }
 
 export const Header: React.FC<HeaderProps> = ({
-  onSave,
-  onPreview,
   onDownload,
   isDownloading,
 }) => {
@@ -23,12 +19,12 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
       <div className="flex justify-center items-center gap-3">
-        <button className="btn btn-secondary text-sm" onClick={onSave}>
+        {/* <button className="btn btn-secondary text-sm" onClick={onSave}>
           Save Progress
         </button>
         <button className="btn btn-secondary text-sm" onClick={onPreview}>
           LaTeX Preview
-        </button>
+        </button> */}
         <button
           className="btn btn-primary text-sm shadow-indigo-200 shadow-md"
           disabled={isDownloading}

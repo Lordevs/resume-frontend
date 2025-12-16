@@ -39,12 +39,7 @@ const App: React.FC = () => {
     <div className="app-container">
       <ToastContainer position="top-right" autoClose={3000} />
 
-      <Header
-        onSave={handleSave}
-        onPreview={handleGeneratePreview}
-        onDownload={handleDownloadPdf}
-        isDownloading={downloading}
-      />
+      <Header onDownload={handleDownloadPdf} isDownloading={downloading} />
 
       <div className="app-main">
         {/* Left Sidebar */}
@@ -62,7 +57,7 @@ const App: React.FC = () => {
         />
 
         {/* Right Preview Sidebar */}
-        <aside className="preview-area">
+        {/* <aside className="preview-area">
           <div className="preview-header">
             <h3 className="text-sm font-bold text-slate-700 m-0">
               LaTeX Output Preview
@@ -71,7 +66,7 @@ const App: React.FC = () => {
           <div className="preview-content custom-scrollbar">
             {latex || "Generating LaTeX preview..."}
           </div>
-        </aside>
+        </aside> */}
       </div>
 
       {/* AI Assistant - Floating Button & Drawer */}

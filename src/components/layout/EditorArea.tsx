@@ -7,6 +7,8 @@ import {
   FolderGit2,
   Zap,
   LayoutTemplate,
+  Trash2,
+  X,
 } from "lucide-react";
 import {
   Resume,
@@ -96,12 +98,13 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
             isOpen={true}
             onToggle={() => {}}
             badge="Required">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
               <FormInput
                 label="Full Name"
                 value={resume.name}
                 onChange={(e) => updateResumeField("name", e.target.value)}
                 placeholder="e.g. John Doe"
+                containerStyle={{ marginBottom: 0, marginTop: 10 }}
               />
               <FormInput
                 label="Job Title"
@@ -109,18 +112,21 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
                 onChange={(e) => updateResumeField("title", e.target.value)}
                 aiContext="Job Title"
                 placeholder="e.g. Software Engineer"
+                containerStyle={{ marginBottom: 0, marginTop: 10 }}
               />
               <FormInput
                 label="Phone"
                 value={resume.phone}
                 onChange={(e) => updateResumeField("phone", e.target.value)}
                 placeholder="+1 234 567 890"
+                containerStyle={{ marginBottom: 0, marginTop: 10 }}
               />
               <FormInput
                 label="Email"
                 value={resume.email}
                 onChange={(e) => updateResumeField("email", e.target.value)}
                 placeholder="john@example.com"
+                containerStyle={{ marginBottom: 0, marginTop: 10 }}
               />
             </div>
 
@@ -130,7 +136,7 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
                 <div key={i} className="flex gap-3 mb-3 items-start">
                   <FormInput
                     placeholder="Platform (e.g. LinkedIn)"
-                    containerStyle={{ marginBottom: 0, flex: 1 }}
+                    containerStyle={{ marginBottom: 0, flex: 1, marginTop: 10 }}
                     value={link.name}
                     onChange={(e) =>
                       handleSocialChange(i, { name: e.target.value })
@@ -138,34 +144,22 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
                   />
                   <FormInput
                     placeholder="URL (https://...)"
-                    containerStyle={{ marginBottom: 0, flex: 2 }}
+                    containerStyle={{ marginBottom: 0, flex: 2, marginTop: 10 }}
                     value={link.url}
                     onChange={(e) =>
                       handleSocialChange(i, { url: e.target.value })
                     }
                   />
                   <button
-                    className="btn btn-ghost text-red-500 hover:bg-red-50 p-2 rounded-md transition-colors"
+                    className="btn btn-ghost text-red-500 hover:bg-red-50 p-2 rounded-md transition-colors mt-5"
                     onClick={() => removeSocialLink(i)}
                     title="Remove Link">
-                    <svg
-                      width="18"
-                      height="18"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
+                    <Trash2 size={18} />
                   </button>
                 </div>
               ))}
               <button
-                className="btn btn-secondary text-xs mt-1"
+                className="btn btn-secondary text-xs mt-"
                 onClick={addSocialLink}>
                 + Add Link
               </button>
@@ -192,7 +186,7 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
               onChange={(e) => updateResumeField("summary", e.target.value)}
               aiContext="Professional Resume Summary"
               placeholder="Experienced software developer with a focus on..."
-              className="min-h-[200px]"
+              className="min-h-[400px] mt-2"
             />
           </ResumeSection>
         )}
@@ -214,27 +208,15 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
                 key={i}
                 className="bg-slate-50 p-4 rounded-lg mb-6 border border-slate-100 relative group">
                 <button
-                  className="absolute top-3 right-3 text-red-500 bg-red-50 hover:bg-red-100 p-1.5 rounded-md transition-all opacity-100 shadow-sm border border-red-100"
+                  className="absolute top-4 right-4 text-red-400 hover:text-red-600 hover:bg-red-50 p-2 rounded-full transition-all"
                   onClick={() => removeEducation(i)}
                   title="Remove Entry">
-                  <svg
-                    width="16"
-                    height="16"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                    />
-                  </svg>
+                  <Trash2 size={18} />
                 </button>
                 <h4 className="text-sm font-bold text-slate-700 uppercase tracking-wide mb-3">
                   Item {i + 1}
                 </h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <FormInput
                     label="Institution"
                     value={edu.institution}
@@ -244,6 +226,7 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
                       })
                     }
                     placeholder="University Name"
+                    containerStyle={{ marginBottom: 0 }}
                   />
                   <FormInput
                     label="Degree"
@@ -252,6 +235,7 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
                       handleEducationChange(i, { degree: e.target.value })
                     }
                     placeholder="Bachelor of Science"
+                    containerStyle={{ marginBottom: 0, marginTop: 10 }}
                   />
                   <FormInput
                     label="Grade/GPA"
@@ -260,6 +244,7 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
                       handleEducationChange(i, { grade: e.target.value })
                     }
                     placeholder="3.8/4.0"
+                    containerStyle={{ marginBottom: 0, marginTop: 10 }}
                   />
                   <FormInput
                     label="Date Period"
@@ -268,6 +253,7 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
                       handleEducationChange(i, { duration: e.target.value })
                     }
                     placeholder="Sep 2018 - Jun 2022"
+                    containerStyle={{ marginBottom: 0, marginTop: 10 }}
                   />
                 </div>
               </div>
@@ -294,26 +280,14 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
             {resume.experiences.map((exp, i) => (
               <div
                 key={i}
-                className="bg-slate-50 p-4 rounded-lg mb-6 border border-slate-100 relative group">
+                className="bg-slate-50 p-4 rounded-lg mb-6 border border-slate-100 relative group mt-5">
                 <button
-                  className="absolute top-3 right-3 text-red-500 bg-red-50 hover:bg-red-100 p-1.5 rounded-md transition-all opacity-100 shadow-sm border border-red-100"
+                  className="absolute top-4 right-4 text-red-400 hover:text-red-600 hover:bg-red-50 p-2 rounded-full transition-all"
                   onClick={() => removeExperience(i)}
                   title="Remove Entry">
-                  <svg
-                    width="16"
-                    height="16"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                    />
-                  </svg>
+                  <Trash2 size={18} />
                 </button>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-4">
                   <FormInput
                     label="Job Role"
                     value={exp.role}
@@ -322,6 +296,7 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
                     }
                     aiContext="Job Role Title"
                     placeholder="Software Engineer"
+                    containerStyle={{ marginBottom: 0, marginTop: 10 }}
                   />
                   <FormInput
                     label="Company"
@@ -330,6 +305,7 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
                       handleExperienceChange(i, { org: e.target.value })
                     }
                     placeholder="Acme Corp"
+                    containerStyle={{ marginBottom: 0, marginTop: 10 }}
                   />
                   <FormInput
                     label="Location"
@@ -340,6 +316,7 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
                       })
                     }
                     placeholder="New York, NY"
+                    containerStyle={{ marginBottom: 0 }}
                   />
                   <FormInput
                     label="Duration"
@@ -350,6 +327,7 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
                       })
                     }
                     placeholder="Jan 2022 - Present"
+                    containerStyle={{ marginBottom: 0 }}
                   />
                 </div>
 
@@ -373,7 +351,7 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
                         placeholder="• Developed a feature that..."
                       />
                       <button
-                        className="btn btn-ghost text-slate-400 hover:text-red-500"
+                        className="btn btn-ghost text-slate-400 hover:text-red-500 p-1 rounded transition-colors self-start mb-6"
                         onClick={() => {
                           const newBullets = [...exp.bullets];
                           newBullets.splice(bi, 1);
@@ -381,7 +359,7 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
                             bullets: newBullets,
                           });
                         }}>
-                        ×
+                        <X size={16} />
                       </button>
                     </div>
                   ))}
@@ -421,24 +399,12 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
                 key={i}
                 className="bg-slate-50 p-4 rounded-lg mb-6 border border-slate-100 relative group">
                 <button
-                  className="absolute top-3 right-3 text-red-500 bg-red-50 hover:bg-red-100 p-1.5 rounded-md transition-all opacity-100 shadow-sm border border-red-100"
+                  className="absolute top-4 right-4 text-red-400 hover:text-red-600 hover:bg-red-50 p-2 rounded-full transition-all"
                   onClick={() => removeProject(i)}
                   title="Remove Entry">
-                  <svg
-                    width="16"
-                    height="16"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                    />
-                  </svg>
+                  <Trash2 size={18} />
                 </button>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-3">
                   <FormInput
                     label="Project Title"
                     value={proj.title}
@@ -446,6 +412,7 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
                       handleProjectChange(i, { title: e.target.value })
                     }
                     placeholder="My Awesome App"
+                    containerStyle={{ marginBottom: 0 }}
                   />
                   <FormInput
                     label="Date"
@@ -454,6 +421,7 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
                       handleProjectChange(i, { date: e.target.value })
                     }
                     placeholder="2023"
+                    containerStyle={{ marginBottom: 0 }}
                   />
                 </div>
                 <FormInput
@@ -484,13 +452,13 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
                         placeholder="• Built a scalable backend..."
                       />
                       <button
-                        className="btn btn-ghost text-slate-400 hover:text-red-500"
+                        className="btn btn-ghost text-slate-400 hover:text-red-500 p-1 rounded transition-colors self-start mt-8"
                         onClick={() => {
                           const newBullets = [...proj.bullets];
                           newBullets.splice(bi, 1);
                           handleProjectChange(i, { bullets: newBullets });
                         }}>
-                        ×
+                        <X size={16} />
                       </button>
                     </div>
                   ))}
@@ -530,18 +498,21 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
                 value={resume.skills.languages}
                 onChange={(e) => updateSkills("languages", e.target.value)}
                 placeholder="Java, Python, C++"
+                containerStyle={{ marginBottom: 0 }}
               />
               <FormInput
                 label="Frameworks"
                 value={resume.skills.frameworks}
                 onChange={(e) => updateSkills("frameworks", e.target.value)}
                 placeholder="React, Spring Boot"
+                containerStyle={{ marginBottom: 0 }}
               />
               <FormInput
                 label="Tools"
                 value={resume.skills.web_tools}
                 onChange={(e) => updateSkills("web_tools", e.target.value)}
                 placeholder="Git, Docker, AWS"
+                containerStyle={{ marginBottom: 0 }}
               />
               <FormInput
                 label="Databases"
@@ -550,6 +521,7 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
                   updateSkills("cloud_databases", e.target.value)
                 }
                 placeholder="PostgreSQL, MongoDB"
+                containerStyle={{ marginBottom: 0 }}
               />
               <FormInput
                 textarea
@@ -557,6 +529,7 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
                 value={resume.skills.coursework}
                 onChange={(e) => updateSkills("coursework", e.target.value)}
                 placeholder="Data Structures, Algorithms..."
+                containerStyle={{ marginBottom: 0 }}
               />
             </div>
           </ResumeSection>
@@ -573,13 +546,14 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
             }
             isOpen={true}
             onToggle={() => {}}>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-5">
               <FormInput
                 label="Section Spacing Top"
                 value={resume.layout.section_spacing_top}
                 onChange={(e) =>
                   updateLayout("section_spacing_top", e.target.value)
                 }
+                containerStyle={{ marginBottom: 0 }}
               />
               <FormInput
                 label="Section Spacing Bottom"
@@ -587,6 +561,7 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
                 onChange={(e) =>
                   updateLayout("section_spacing_bottom", e.target.value)
                 }
+                containerStyle={{ marginBottom: 0 }}
               />
               <FormInput
                 label="Section Spacing After"
@@ -594,11 +569,13 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
                 onChange={(e) =>
                   updateLayout("section_spacing_after", e.target.value)
                 }
+                containerStyle={{ marginBottom: 0 }}
               />
               <FormInput
                 label="Bullet Spacing"
                 value={resume.layout.bullet_spacing}
                 onChange={(e) => updateLayout("bullet_spacing", e.target.value)}
+                containerStyle={{ marginBottom: 0 }}
               />
             </div>
           </ResumeSection>

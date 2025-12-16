@@ -38,17 +38,17 @@ export const useResume = () => {
     return escaped;
   };
 
-  const fixLatexDimension = (val: string): string => {
-    if (!val) return "0pt";
-    const trimmed = val.trim();
-    if (/^-?\d+(\.\d+)?$/.test(trimmed)) {
-      return `${trimmed}pt`;
-    }
-    if (/^-?\d+(\.\d+)?\s*(pt|mm|cm|in|ex|em|pc|bp|dd|cc|sp)$/i.test(trimmed)) {
-      return trimmed;
-    }
-    return "0pt";
-  };
+  //   const fixLatexDimension = (val: string): string => {
+  //     if (!val) return "0pt";
+  //     const trimmed = val.trim();
+  //     if (/^-?\d+(\.\d+)?$/.test(trimmed)) {
+  //       return `${trimmed}pt`;
+  //     }
+  //     if (/^-?\d+(\.\d+)?\s*(pt|mm|cm|in|ex|em|pc|bp|dd|cc|sp)$/i.test(trimmed)) {
+  //       return trimmed;
+  //     }
+  //     return "0pt";
+  //   };
 
   const sanitizeResume = (r: Resume): Resume => {
     const clean = JSON.parse(JSON.stringify(r)) as Resume;
@@ -98,7 +98,7 @@ export const useResume = () => {
 
     Object.keys(clean.layout).forEach((key) => {
       const k = key as keyof typeof clean.layout;
-      clean.layout[k] = fixLatexDimension(String(clean.layout[k]));
+      //   clean.layout[k] = fixLatexDimension(String(clean.layout[k]));
     });
 
     return clean;
