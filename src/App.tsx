@@ -26,19 +26,34 @@ import AiAssistant from "./components/AiAssistant";
 
 interface ValidationResult {
   ok: boolean;
-  messages: string[];
+  messages: string[]; // All messages for toast
+  errorsBySection: Record<string, string[]>; // Contextual messages
 }
 
 const validateResume = (resume: Resume): ValidationResult => {
-  const messages: string[] = [];
-  if (!resume.name.trim()) messages.push("Name is required.");
-  if (!resume.email.trim()) messages.push("Email is required.");
-  if (!resume.summary.trim()) messages.push("Summary is required.");
+  const errorsBySection: Record<string, string[]> = {};
+  const addError = (section: string, msg: string) => {
+    if (!errorsBySection[section]) errorsBySection[section] = [];
+    errorsBySection[section].push(msg);
+  };
+
+  if (!resume.name.trim()) addError("personal", "Name is required.");
+  if (!resume.email.trim()) addError("personal", "Email is required.");
+
+  if (!resume.summary.trim()) addError("summary", "Summary is required.");
+
   if (resume.education.length === 0)
-    messages.push("At least one education entry is required.");
+    addError("education", "At least one education entry is required.");
   if (resume.education.some((e) => !e.institution.trim()))
-    messages.push("All education entries need an institution.");
-  return { ok: messages.length === 0, messages };
+    addError("education", "All education entries need an institution.");
+
+  const allMessages = Object.values(errorsBySection).flat();
+
+  return {
+    ok: allMessages.length === 0,
+    messages: allMessages,
+    errorsBySection,
+  };
 };
 
 const App: React.FC = () => {
@@ -48,6 +63,7 @@ const App: React.FC = () => {
   const [validation, setValidation] = useState<ValidationResult>({
     ok: true,
     messages: [],
+    errorsBySection: {},
   });
   const [downloading, setDownloading] = useState(false);
 
@@ -396,18 +412,19 @@ const App: React.FC = () => {
         {/* Center Editor */}
         <main className="editor-area custom-scrollbar">
           <div className="editor-card">
-            {!validation.ok && validation.messages.length > 0 && (
-              <div className="bg-red-50 border border-red-100 text-red-700 p-3 rounded-lg mb-6 text-sm flex flex-col gap-1">
-                <span className="font-bold flex items-center gap-2">
-                  <span className="text-xl">!</span> Action Required
-                </span>
-                <ul className="list-disc pl-5 m-0 text-slate-600">
-                  {validation.messages.map((m, i) => (
-                    <li key={i}>{m}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
+            {validation.errorsBySection[activeSection] &&
+              validation.errorsBySection[activeSection].length > 0 && (
+                <div className="bg-red-50 border border-red-100 text-red-700 p-3 rounded-lg mb-6 text-sm flex flex-col gap-1">
+                  <span className="font-bold flex items-center gap-2">
+                    <span className="text-xl">!</span> Action Required
+                  </span>
+                  <ul className="list-disc pl-5 m-0 text-slate-600">
+                    {validation.errorsBySection[activeSection].map((m, i) => (
+                      <li key={i}>{m}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
             {/* Dynamic Section Rendering */}
             {activeSection === "personal" && (
