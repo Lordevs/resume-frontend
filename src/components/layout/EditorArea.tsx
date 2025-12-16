@@ -46,6 +46,7 @@ interface EditorAreaProps {
   addEducation: () => void;
   addExperience: () => void;
   addProject: () => void;
+  setActiveSection: (section: string) => void;
 }
 
 export const EditorArea: React.FC<EditorAreaProps> = ({
@@ -67,7 +68,50 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
   addEducation,
   addExperience,
   addProject,
+  setActiveSection,
 }) => {
+  React.useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const id = entry.target.id.replace("section-", "");
+            // Only update if different to avoid potential loops (though React handles loose equality)
+            // We use a functional update or just call it.
+            // But we need to be careful not to spam updates.
+            // Since activeSection is prop, we can check it, but effects depend on closures.
+            // Better to just dispatch.
+            if (typeof setActiveSection === "function") {
+              setActiveSection(id);
+            }
+          }
+        });
+      },
+      {
+        root: document.querySelector(".editor-area"), // Use the scroll container
+        threshold: 0, // Trigger immediately when sensitive area is touched
+        rootMargin: "-20% 0px -65% 0px", // Focus on an active band near the top
+      }
+    );
+
+    const sections = [
+      "personal",
+      "summary",
+      "education",
+      "experience",
+      "projects",
+      "skills",
+      "layout",
+    ];
+
+    sections.forEach((section) => {
+      const element = document.getElementById(`section-${section}`);
+      if (element) observer.observe(element);
+    });
+
+    return () => observer.disconnect();
+  }, [setActiveSection]);
+
   return (
     <main className="editor-area custom-scrollbar">
       {Object.keys(validation.errorsBySection).length > 0 && (
@@ -232,7 +276,7 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
           {resume.education.map((edu, i) => (
             <div
               key={i}
-              className="bg-slate-50 p-4 rounded-lg mb-6 border border-slate-100 relative group">
+              className="bg-slate-50 p-4 rounded-lg my-4 border border-slate-100 relative group">
               <button
                 className="absolute top-4 right-4 text-red-400 hover:text-red-600 hover:bg-red-50 p-2 rounded-full transition-all"
                 onClick={() => removeEducation(i)}

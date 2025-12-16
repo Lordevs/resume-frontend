@@ -58,6 +58,7 @@ const App: React.FC = () => {
         <EditorArea
           resume={resume}
           activeSection={activeSection}
+          setActiveSection={setActiveSection}
           validation={validation}
           {...handlers}
         />
